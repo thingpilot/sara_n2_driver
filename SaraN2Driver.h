@@ -43,7 +43,8 @@ class SaraN2
 			FAIL_SET_PROFILE_VALIDITY = 6,
 			VALUE_OUT_OF_BOUNDS       = 7,
 			FAIL_SET_COAP_IP_PORT     = 8,
-			FAIL_SET_COAP_URI         = 9
+			FAIL_SET_COAP_URI         = 9,
+			URI_TOO_LONG              = 10
 		};
 
 		SaraN2(PinName txu, PinName rxu, PinName cts, PinName rst, PinName vint, PinName gpio, int baud = 57600);

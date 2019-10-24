@@ -133,6 +133,13 @@ int SaraN2::set_coap_ip_port(char *ipv4, uint16_t port)
 
 int SaraN2::set_coap_uri(char *uri)
 {
+	int uri_length = sizeof(uri) / sizeof(uri[0]);
+	
+	if(uri_length > 200)
+	{
+		return SaraN2::URI_TOO_LONG;
+	}
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=1,\"%s\"", uri);
