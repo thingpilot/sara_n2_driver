@@ -134,7 +134,7 @@ int SaraN2::set_coap_ip_port(char *ipv4, uint16_t port)
 int SaraN2::set_coap_uri(char *uri)
 {
 	int uri_length = sizeof(uri) / sizeof(uri[0]);
-	
+
 	if(uri_length > 200)
 	{
 		return SaraN2::URI_TOO_LONG;
@@ -146,6 +146,118 @@ int SaraN2::set_coap_uri(char *uri)
 	if(!_parser->recv("OK"))
 	{
 		return SaraN2::FAIL_SET_COAP_URI;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::pdu_header_add_uri_host()
+{
+	_parser->flush();
+
+	_parser->send("AT+UCOAP=2,\"0\",\"1\"");
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_ADD_URI_HOST_PDU;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::pdu_header_add_uri_port()
+{
+	_parser->flush();
+
+	_parser->send("AT+UCOAP=2,\"1\",\"1\"");
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_ADD_URI_PORT_PDU;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::pdu_header_add_uri_path()
+{
+	_parser->flush();
+
+	_parser->send("AT+UCOAP=2,\"2\",\"1\"");
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_ADD_URI_PATH_PDU;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::pdu_header_add_uri_query()
+{
+	_parser->flush();
+
+	_parser->send("AT+UCOAP=2,\"3\",\"1\"");
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_ADD_URI_QUERY_PDU;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::pdu_header_remove_uri_host()
+{
+	_parser->flush();
+
+	_parser->send("AT+UCOAP=2,\"0\",\"0\"");
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_REMOVE_URI_HOST_PDU;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::pdu_header_remove_uri_port()
+{
+	_parser->flush();
+
+	_parser->send("AT+UCOAP=2,\"1\",\"0\"");
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_REMOVE_URI_PORT_PDU;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::pdu_header_remove_uri_path()
+{
+	_parser->flush();
+
+	_parser->send("AT+UCOAP=2,\"2\",\"0\"");
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_REMOVE_URI_PATH_PDU;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::pdu_header_remove_uri_query()
+{
+	_parser->flush();
+
+	_parser->send("AT+UCOAP=2,\"3\",\"0\"");
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_REMOVE_URI_QUERY_PDU;
 	}
 
 	return SaraN2::SARAN2_OK;

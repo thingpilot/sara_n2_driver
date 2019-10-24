@@ -44,7 +44,15 @@ class SaraN2
 			VALUE_OUT_OF_BOUNDS       = 7,
 			FAIL_SET_COAP_IP_PORT     = 8,
 			FAIL_SET_COAP_URI         = 9,
-			URI_TOO_LONG              = 10
+			URI_TOO_LONG              = 10,
+			FAIL_ADD_URI_HOST_PDU     = 11,
+			FAIL_ADD_URI_PORT_PDU     = 12,
+			FAIL_ADD_URI_PATH_PDU     = 13,
+			FAIL_ADD_URI_QUERY_PDU    = 14,
+			FAIL_REMOVE_URI_HOST_PDU  = 15,
+			FAIL_REMOVE_URI_PORT_PDU  = 16,
+			FAIL_REMOVE_URI_PATH_PDU  = 17,
+			FAIL_REMOVE_URI_QUERY_PDU = 18
 		};
 
 		SaraN2(PinName txu, PinName rxu, PinName cts, PinName rst, PinName vint, PinName gpio, int baud = 57600);
@@ -64,6 +72,22 @@ class SaraN2
 		int set_coap_ip_port(char *ipv4, uint16_t port);
 
 		int set_coap_uri(char *uri);
+
+		int pdu_header_add_uri_host();
+
+		int pdu_header_add_uri_port();
+
+		int pdu_header_add_uri_path();
+
+		int pdu_header_add_uri_query();
+
+		int pdu_header_remove_uri_host();
+
+		int pdu_header_remove_uri_port();
+
+		int pdu_header_remove_uri_path();
+
+		int pdu_header_remove_uri_query();
 
 	private:
 
