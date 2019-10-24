@@ -70,6 +70,18 @@ class SaraN2
 			PROFILE_VALID = 1
 		};
 
+		enum
+		{
+			TEXT_PLAIN        = 0,
+			APPLICATION_LINK  = 1,
+			APPLICATION_XML   = 2,
+			APPLICATION_OCTET = 3,
+			APPLICATION_RDF   = 4,
+			APPLICATION_EXI   = 5,
+			APPLICATION_JSON  = 6,
+			APPLICATION_CBOR  = 7
+		};
+
 		SaraN2(PinName txu, PinName rxu, PinName cts, PinName rst, PinName vint, PinName gpio, int baud = 57600);
 
 		~SaraN2();
