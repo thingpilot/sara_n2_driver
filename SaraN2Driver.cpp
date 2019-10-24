@@ -397,3 +397,23 @@ int SaraN2::reboot_module()
 
 	return SaraN2::SARAN2_OK;
 }
+
+/** Configure customisable aspects of the UE given the functions and values
+ *  available in the enumerated list of AT+NCONFIG functions and values
+ * 
+ * @param function Enumerated value of AT+NCONFIG function to perform
+ * @param value Enumerated value of AT+NCONFIG value to use in function
+ * @return Indicates success or failure reason 
+ */ 
+int SaraN2::configure_ue(uint8_t function, uint8_t value)
+{
+	_parser->flush();
+
+	_parser->send("AT+NCONFIG=\"%s\",\"%s\"", config_functions[function], config_values[value]);
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_CONFIGURE_UE;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
