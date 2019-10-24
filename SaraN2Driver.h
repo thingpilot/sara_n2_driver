@@ -34,25 +34,40 @@ class SaraN2
 
 		enum
 		{
-			SARAN2_OK 				  = 0,
-			FAIL_AT             	  = 1,
-			FAIL_SELECT_PROFILE       = 2,
-			INVALID_PROFILE           = 3,
-			FAIL_LOAD_PROFILE         = 4,
-			FAIL_SAVE_PROFILE         = 5,
-			FAIL_SET_PROFILE_VALIDITY = 6,
-			VALUE_OUT_OF_BOUNDS       = 7,
-			FAIL_SET_COAP_IP_PORT     = 8,
-			FAIL_SET_COAP_URI         = 9,
-			URI_TOO_LONG              = 10,
-			FAIL_ADD_URI_HOST_PDU     = 11,
-			FAIL_ADD_URI_PORT_PDU     = 12,
-			FAIL_ADD_URI_PATH_PDU     = 13,
-			FAIL_ADD_URI_QUERY_PDU    = 14,
-			FAIL_REMOVE_URI_HOST_PDU  = 15,
-			FAIL_REMOVE_URI_PORT_PDU  = 16,
-			FAIL_REMOVE_URI_PATH_PDU  = 17,
-			FAIL_REMOVE_URI_QUERY_PDU = 18
+			SARAN2_OK 				  	  = 0,
+			FAIL_AT             	  	  = 1,
+			FAIL_SELECT_PROFILE       	  = 2,
+			INVALID_PROFILE           	  = 3,
+			FAIL_LOAD_PROFILE         	  = 4,
+			FAIL_SAVE_PROFILE         	  = 5,
+			FAIL_SET_PROFILE_VALIDITY 	  = 6,
+			VALUE_OUT_OF_BOUNDS       	  = 7,
+			FAIL_SET_COAP_IP_PORT     	  = 8,
+			FAIL_SET_COAP_URI         	  = 9,
+			URI_TOO_LONG              	  = 10,
+			FAIL_ADD_URI_HOST_PDU     	  = 11,
+			FAIL_ADD_URI_PORT_PDU     	  = 12,
+			FAIL_ADD_URI_PATH_PDU     	  = 13,
+			FAIL_ADD_URI_QUERY_PDU    	  = 14,
+			FAIL_REMOVE_URI_HOST_PDU  	  = 15,
+			FAIL_REMOVE_URI_PORT_PDU  	  = 16,
+			FAIL_REMOVE_URI_PATH_PDU      = 17,
+			FAIL_REMOVE_URI_QUERY_PDU     = 18,
+			FAIL_SELECT_COAP_AT_INTERFACE = 19
+		};
+
+		enum
+		{
+			COAP_PROFILE_0 = 0,
+			COAP_PROFILE_1 = 1,
+			COAP_PROFILE_2 = 2,
+			COAP_PROFILE_3 = 3
+		};
+
+		enum
+		{
+			PROFILE_INVALID = 0,
+			PROFILE_VALID = 1
 		};
 
 		SaraN2(PinName txu, PinName rxu, PinName cts, PinName rst, PinName vint, PinName gpio, int baud = 57600);
@@ -88,6 +103,8 @@ class SaraN2
 		int pdu_header_remove_uri_path();
 
 		int pdu_header_remove_uri_query();
+
+		int select_coap_at_interface();
 
 	private:
 
