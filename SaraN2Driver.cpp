@@ -417,3 +417,19 @@ int SaraN2::configure_ue(uint8_t function, uint8_t value)
 
 	return SaraN2::SARAN2_OK;
 }
+
+/** Return operation stats, of a given type, of the module
+ * 
+ * @param type Enumerated type of the AT+NUESTATS types to query
+ * @return Indicates success or failure reason
+ */
+int SaraN2::nuestats(uint8_t type)
+{
+	_parser->flush();
+
+	_parser->send("AT+NUESTATS=\"%s\"", nuestats_types[type]);
+
+	/* Do stuff here to parse NUESTATS output */
+
+	return SaraN2::SARAN2_OK;
+}

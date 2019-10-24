@@ -106,6 +106,17 @@ class SaraN2
 			FALSE = 1
 		};
 
+		/** Enumerated list of AT+NUESTATS types
+		 */
+		enum
+		{
+			RADIO   = 0,
+			CELL    = 1,
+			BLER    = 2,
+			APPSMEM = 3,
+			THP     = 4
+		};
+
 		/** Constructor for the SaraN2 class. Instantiates an ATCmdParser object
 		 *  on the heap for comms between microcontroller and modem
 		 * 
@@ -262,6 +273,13 @@ class SaraN2
 		 */ 
 		int configure_ue(uint8_t function, uint8_t value);
 
+		/** Return operation stats, of a given type, of the module
+		 * 
+		 * @param type Enumerated type of the AT+NUESTATS types to query
+		 * @return Indicates success or failure reason
+		 */
+		int nuestats(uint8_t type);
+
 	private:
 
 		/** Potential AT+CONFIG function arguments, to be accessed using the enumerated
@@ -274,9 +292,15 @@ class SaraN2
 
 		/** Potential AT+NCONFIG value arguments, to be access using the enumerated
 		 *  value that corresponds to the index of the value you wish to use, i.e:
-		 *  config_values[TRUE]
+		 *  config_values[TRUE];
 		 */
 		const char *config_values[2] = { "TRUE", "FALSE" };
+
+		/** Potential AT+NUESTATS type arguments, to be access using the enumerated
+		 *  type that corresponds to the index of the type you wish to use, i.e:
+		 *  nuestats_types[RADIO];
+		 */
+		const char *nuestats_types[5] = { "RADIO", "CELL", "BLER", "APPSMEM", "THP" };
 
 		DigitalIn  _cts;
 		DigitalOut _rst;
