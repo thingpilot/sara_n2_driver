@@ -378,3 +378,22 @@ int SaraN2::coap_post()
 {
 	return SaraN2::SARAN2_OK;
 }
+
+
+/** Reboots the module. After receiving the 'REBOOTING' response, no further
+ *  AT commands will be processed until the module has successfully power on
+ *
+ * @return Indicates success or failure reason
+ */
+int SaraN2::reboot_module()
+{
+	_parser->flush();
+
+	_parser->send("AT+NRB");
+	if(!_parser->recv("REBOOTING"))
+	{
+		SaraN2::FAIL_REBOOT;
+	}
+
+	return SaraN2::SARAN2_OK;
+}

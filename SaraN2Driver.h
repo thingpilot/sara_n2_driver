@@ -48,7 +48,8 @@ class SaraN2
 			FAIL_REMOVE_URI_PORT_PDU  	  = 16,
 			FAIL_REMOVE_URI_PATH_PDU      = 17,
 			FAIL_REMOVE_URI_QUERY_PDU     = 18,
-			FAIL_SELECT_COAP_AT_INTERFACE = 19
+			FAIL_SELECT_COAP_AT_INTERFACE = 19,
+			FAIL_REBOOT                   = 20
 		};
 
 		/** List of available CoAP profiles
@@ -222,6 +223,13 @@ class SaraN2
 		int coap_put();
 
 		int coap_post();
+
+		/** Reboots the module. After receiving the 'REBOOTING' response, no further
+		 *  AT commands will be processed until the module has successfully power on
+		 *
+		 * @return Indicates success or failure reason
+		 */
+		int reboot_module();
 
 	private:
 
