@@ -39,3 +39,22 @@ int SaraN2::at()
 
 	return SaraN2::SARAN2_OK;
 }
+
+
+int SaraN2::select_profile(uint8_t profile)
+{
+	if(profile > NUMBER_OF_PROFILES) 
+	{
+		return SaraN2::INVALID_PROFILE;
+	}
+	
+	_parser->flush();
+
+	_parser->send("AT+UCOAP=3,\"%d\"", profile);
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_SELECT_PROFILE;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
