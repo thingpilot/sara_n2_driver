@@ -262,3 +262,17 @@ int SaraN2::pdu_header_remove_uri_query()
 
 	return SaraN2::SARAN2_OK;
 }
+
+
+int SaraN2::select_coap_at_interface()
+{
+	_parser->flush();
+
+	_parser->send("AT+USELCP=1");
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_SELECT_COAP_AT_INTERFACE;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
