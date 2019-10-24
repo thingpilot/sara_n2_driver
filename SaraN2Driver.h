@@ -48,7 +48,9 @@ class SaraN2
 			FAIL_REMOVE_URI_PORT_PDU  	  = 16,
 			FAIL_REMOVE_URI_PATH_PDU      = 17,
 			FAIL_REMOVE_URI_QUERY_PDU     = 18,
-			FAIL_SELECT_COAP_AT_INTERFACE = 19
+			FAIL_SELECT_COAP_AT_INTERFACE = 19,
+			FAIL_REBOOT                   = 20,
+			FAIL_CONFIGURE_UE             = 21
 		};
 
 		/** List of available CoAP profiles
@@ -81,6 +83,38 @@ class SaraN2
 			APPLICATION_EXI   = 5,
 			APPLICATION_JSON  = 6,
 			APPLICATION_CBOR  = 7
+		};
+
+		/** Enumerated list of AT+NCONFIG functions
+		 */
+		enum
+		{
+			AUTOCONNECT        = 0,
+			SCRAMBLING         = 1,
+			SI_AVOID           = 2,
+			COMBINE_ATTACH     = 3,
+			CELL_RESELECTION   = 4,
+			ENABLE_BIP         = 5,
+			NAS_SIM_PSM_ENABLE = 6
+		};
+		
+		/** Enumerated list of AT+NCONFIG values
+		 */
+		enum
+		{
+			TRUE  = 0,
+			FALSE = 1
+		};
+
+		/** Enumerated list of AT+NUESTATS types
+		 */
+		enum
+		{
+			RADIO   = 0,
+			CELL    = 1,
+			BLER    = 2,
+			APPSMEM = 3,
+			THP     = 4
 		};
 
 		/** Constructor for the SaraN2 class. Instantiates an ATCmdParser object
@@ -223,7 +257,50 @@ class SaraN2
 
 		int coap_post();
 
+		/** Reboots the module. After receiving the 'REBOOTING' response, no further
+		 *  AT commands will be processed until the module has successfully power on
+		 *
+		 * @return Indicates success or failure reason
+		 */
+		int reboot_module();
+
+		/** Configure customisable aspects of the UE given the functions and values
+		 *  available in the enumerated list of AT+NCONFIG functions and values
+		 * 
+		 * @param function Enumerated value of AT+NCONFIG function to perform
+		 * @param value Enumerated value of AT+NCONFIG value to use in function
+		 * @return Indicates success or failure reason 
+		 */ 
+		int configure_ue(uint8_t function, uint8_t value);
+
+		/** Return operation stats, of a given type, of the module
+		 * 
+		 * @param type Enumerated type of the AT+NUESTATS types to query
+		 * @return Indicates success or failure reason
+		 */
+		int nuestats(uint8_t type);
+
 	private:
+
+		/** Potential AT+CONFIG function arguments, to be accessed using the enumerated
+		 *  value that corresponds to the index of the function you wish to use, i.e:
+		 *  config_functions[AUTOCONNECT];
+		 */
+		const char *config_functions[7] = { "AUTOCONNECT", 
+                   "CR_0354_0338_SCRAMBLING", "CR_0859_SI_AVOID", "COMBINE_ATTACH",
+				   "CELL_RESELECTION", "ENABLE_BIP", "NAS_SIM_POWER_SAVING_ENABLE" };
+
+		/** Potential AT+NCONFIG value arguments, to be access using the enumerated
+		 *  value that corresponds to the index of the value you wish to use, i.e:
+		 *  config_values[TRUE];
+		 */
+		const char *config_values[2] = { "TRUE", "FALSE" };
+
+		/** Potential AT+NUESTATS type arguments, to be access using the enumerated
+		 *  type that corresponds to the index of the type you wish to use, i.e:
+		 *  nuestats_types[RADIO];
+		 */
+		const char *nuestats_types[5] = { "RADIO", "CELL", "BLER", "APPSMEM", "THP" };
 
 		DigitalIn  _cts;
 		DigitalOut _rst;

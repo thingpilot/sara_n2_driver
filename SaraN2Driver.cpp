@@ -378,3 +378,58 @@ int SaraN2::coap_post()
 {
 	return SaraN2::SARAN2_OK;
 }
+
+
+/** Reboots the module. After receiving the 'REBOOTING' response, no further
+ *  AT commands will be processed until the module has successfully power on
+ *
+ * @return Indicates success or failure reason
+ */
+int SaraN2::reboot_module()
+{
+	_parser->flush();
+
+	_parser->send("AT+NRB");
+	if(!_parser->recv("REBOOTING"))
+	{
+		SaraN2::FAIL_REBOOT;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
+
+/** Configure customisable aspects of the UE given the functions and values
+ *  available in the enumerated list of AT+NCONFIG functions and values
+ * 
+ * @param function Enumerated value of AT+NCONFIG function to perform
+ * @param value Enumerated value of AT+NCONFIG value to use in function
+ * @return Indicates success or failure reason 
+ */ 
+int SaraN2::configure_ue(uint8_t function, uint8_t value)
+{
+	_parser->flush();
+
+	_parser->send("AT+NCONFIG=\"%s\",\"%s\"", config_functions[function], config_values[value]);
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_CONFIGURE_UE;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
+
+/** Return operation stats, of a given type, of the module
+ * 
+ * @param type Enumerated type of the AT+NUESTATS types to query
+ * @return Indicates success or failure reason
+ */
+int SaraN2::nuestats(uint8_t type)
+{
+	_parser->flush();
+
+	_parser->send("AT+NUESTATS=\"%s\"", nuestats_types[type]);
+
+	/* Do stuff here to parse NUESTATS output */
+
+	return SaraN2::SARAN2_OK;
+}
