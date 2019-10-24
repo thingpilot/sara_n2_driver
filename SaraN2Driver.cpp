@@ -10,7 +10,8 @@
 #include "SaraN2Driver.h"
 
 
-SaraN2::SaraN2(PinName txu, PinName rxu, PinName cts, PinName rst, PinName vint, PinName gpio, int baud) :
+SaraN2::SaraN2(PinName txu, PinName rxu, PinName cts, PinName rst, PinName vint, 
+               PinName gpio, int baud) :
 			   _cts(cts), _rst(rst, 1), _vint(vint), _gpio(gpio)
 {
 	_serial = new UARTSerial(txu, rxu, baud);
@@ -26,7 +27,10 @@ SaraN2::~SaraN2()
 	delete _parser;
 }
 
-
+/** Send "AT" command
+ *
+ * @return Indicates success or failure 
+ */
 int SaraN2::at()
 {
 	_parser->flush();
@@ -40,7 +44,12 @@ int SaraN2::at()
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Select CoAP profile number, between 0-3
+ *
+ * @param profile Use enumerated values COAP_PROFILE_x to select profile
+ *                corresponding to that number
+ * @return Indicates success or failure reason
+ */
 int SaraN2::select_profile(uint8_t profile)
 {
 	if(profile > NUMBER_OF_PROFILES) 
@@ -59,7 +68,12 @@ int SaraN2::select_profile(uint8_t profile)
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Restore CoAP profile from NVM, between 0-3
+ *
+ * @param profile Use enumerated values COAP_PROFILE_x to restore profile
+ *                corresponding to that number
+ * @return Indicates success or failure reason
+ */
 int SaraN2::load_profile(uint8_t profile)
 {
 	if(profile > NUMBER_OF_PROFILES) 
@@ -78,7 +92,12 @@ int SaraN2::load_profile(uint8_t profile)
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Store CoAP profile to NVM, between 0-3
+ *
+ * @param profile Use enumerated values COAP_PROFILE_x to store profile
+ *                corresponding to that number
+ * @return Indicates success or failure reason
+ */
 int SaraN2::save_profile(uint8_t profile)
 {
 	if(profile > NUMBER_OF_PROFILES) 

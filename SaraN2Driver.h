@@ -82,16 +82,39 @@ class SaraN2
 			APPLICATION_CBOR  = 7
 		};
 
-		SaraN2(PinName txu, PinName rxu, PinName cts, PinName rst, PinName vint, PinName gpio, int baud = 57600);
+		SaraN2(PinName txu, PinName rxu, PinName cts, PinName rst, PinName vint, 
+			   PinName gpio, int baud = 57600);
 
 		~SaraN2();
 
+		/** Send "AT" command
+         *
+         * @return Indicates success or failure 
+         */
 		int at();
 
+		/** Select CoAP profile number, between 0-3
+         *
+		 * @param profile Use enumerated values COAP_PROFILE_x to select profile
+		 *                corresponding to that number
+         * @return Indicates success or failure reason
+         */
 		int select_profile(uint8_t profile);
 
+		/** Restore CoAP profile from NVM, between 0-3
+         *
+		 * @param profile Use enumerated values COAP_PROFILE_x to restore profile
+		 *                corresponding to that number
+         * @return Indicates success or failure reason
+         */
 		int load_profile(uint8_t profile);
 
+		/** Store CoAP profile to NVM, between 0-3
+         *
+		 * @param profile Use enumerated values COAP_PROFILE_x to store profile
+		 *                corresponding to that number
+         * @return Indicates success or failure reason
+         */
 		int save_profile(uint8_t profile);
 
 		int set_profile_validity(uint8_t valid);
