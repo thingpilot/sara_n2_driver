@@ -268,16 +268,15 @@ class SaraN2
 		 *  value that corresponds to the index of the function you wish to use, i.e:
 		 *  config_functions[AUTOCONNECT];
 		 */
-		const char *config_functions[] = { "AUTOCONNECT", "CR_0354_0338_SCRAMBLING",
-		                                   "CR_0859_SI_AVOID", "COMBINE_ATTACH",
-										   "CELL_RESELECTION", "ENABLE_BIP",
-										   "NAS_SIM_POWER_SAVING_ENABLE" };
+		const char *config_functions[7] = { "AUTOCONNECT", 
+                   "CR_0354_0338_SCRAMBLING", "CR_0859_SI_AVOID", "COMBINE_ATTACH",
+				   "CELL_RESELECTION", "ENABLE_BIP", "NAS_SIM_POWER_SAVING_ENABLE" };
 
 		/** Potential AT+NCONFIG value arguments, to be access using the enumerated
 		 *  value that corresponds to the index of the value you wish to use, i.e:
 		 *  config_values[TRUE]
 		 */
-		const char *config_values[] = { "TRUE", "FALSE" };
+		const char *config_values[2] = { "TRUE", "FALSE" };
 
 		DigitalIn  _cts;
 		DigitalOut _rst;
