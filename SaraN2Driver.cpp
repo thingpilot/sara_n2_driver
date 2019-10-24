@@ -104,13 +104,41 @@ int SaraN2::set_profile_validity(uint8_t valid)
 	{
 		return SaraN2::VALUE_OUT_OF_BOUNDS;
 	}
-	
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=4,\"%d\"", valid);
 	if(!_parser->recv("OK"))
 	{
 		return SaraN2::FAIL_SET_PROFILE_VALIDITY;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::set_coap_ip_port(char *ipv4, uint16_t port)
+{
+	_parser->flush();
+
+	_parser->send("AT+UCOAP=0,\"%s\",\"%d\"", ipv4, port);
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_SET_COAP_IP_PORT;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::set_coap_uri(char *uri)
+{
+	_parser->flush();
+
+	_parser->send("AT+UCOAP=1,\"%s\"", uri);
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_SET_COAP_URI;
 	}
 
 	return SaraN2::SARAN2_OK;

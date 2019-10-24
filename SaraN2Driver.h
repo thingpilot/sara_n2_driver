@@ -41,7 +41,9 @@ class SaraN2
 			FAIL_LOAD_PROFILE         = 4,
 			FAIL_SAVE_PROFILE         = 5,
 			FAIL_SET_PROFILE_VALIDITY = 6,
-			VALUE_OUT_OF_BOUNDS       = 7
+			VALUE_OUT_OF_BOUNDS       = 7,
+			FAIL_SET_COAP_IP_PORT     = 8,
+			FAIL_SET_COAP_URI         = 9
 		};
 
 		SaraN2(PinName txu, PinName rxu, PinName cts, PinName rst, PinName vint, PinName gpio, int baud = 57600);
@@ -57,6 +59,10 @@ class SaraN2
 		int save_profile(uint8_t profile);
 
 		int set_profile_validity(uint8_t valid);
+
+		int set_coap_ip_port(char *ipv4, uint16_t port);
+
+		int set_coap_uri(char *uri);
 
 	private:
 
