@@ -18,20 +18,15 @@
  */
 #define NUMBER_OF_PROFILES 3 
 
-/*
-AT+UCOAP=0,"165.22.122.212","5683"      set destination ip/port
-AT+UCOAP=1,"coap://165.22.122.212:5683/uri"       set coap uri
-AT+UCOAP=2,"2","1"       configure PDU to include uri path
-AT+UCOAP=4,"1"      set profile as valid
-AT+USELCP=1       turn on CoAP AT command mode
-AT+UCOAPC=1     do GET request
-*/
-
+/** Base class for the SaraN2xx series of NB-IoT modules
+ */ 
 class SaraN2
 {
 
 	public:
 
+		/** Function return codes
+		 */
 		enum
 		{
 			SARAN2_OK 				  	  = 0,
@@ -56,6 +51,8 @@ class SaraN2
 			FAIL_SELECT_COAP_AT_INTERFACE = 19
 		};
 
+		/** List of available CoAP profiles
+		 */ 
 		enum
 		{
 			COAP_PROFILE_0 = 0,
@@ -64,12 +61,16 @@ class SaraN2
 			COAP_PROFILE_3 = 3
 		};
 
+		/** Enumerated 'valid' flags
+		 */ 
 		enum
 		{
 			PROFILE_INVALID = 0,
 			PROFILE_VALID = 1
 		};
 
+		/** Enumerated data format types
+		 */
 		enum
 		{
 			TEXT_PLAIN        = 0,
@@ -82,9 +83,23 @@ class SaraN2
 			APPLICATION_CBOR  = 7
 		};
 
+		/** Constructor for the SaraN2 class. Instantiates an ATCmdParser object
+		 *  on the heap for comms between microcontroller and modem
+		 * 
+		 * @param txu Pin connected to SaraN2 TXD (This is MCU TXU)
+		 * @param rxu Pin connected to SaraN2 RXD (This is MCU RXU)
+		 * @param cts Pin connected to SaraN2 CTS
+		 * @param rst Pin connected to SaraN2 RST
+		 * @param vint Pin conencted to SaraN2 VINT
+		 * @param gpio Pin connected to SaraN2 GPIO1
+		 * @param baud Baud rate for UART between MCU and SaraN2
+		 */  
 		SaraN2(PinName txu, PinName rxu, PinName cts, PinName rst, PinName vint, 
 			   PinName gpio, int baud = 57600);
 
+		/** Destructor for the SaraN2 class. Deletes the UARTSerial and ATCmdParser
+		 *  objects from the heap to release unused memory
+		 */  
 		~SaraN2();
 
 		/** Send "AT" command
@@ -117,28 +132,87 @@ class SaraN2
          */
 		int save_profile(uint8_t profile);
 
+		/** Set valid flag of profile to either valid or invalid. Only valid profiles
+		 *  can be used for CoAP operations.
+         *
+		 * @param valid Use enumerated values PROFILE_VALID or PROFILE_INVALID 
+		 *              to set validity flag
+         * @return Indicates success or failure reason
+         */
 		int set_profile_validity(uint8_t valid);
 
+		/** Set destination IP address and CoAP port to which to send message
+         *
+		 * @param *ipv4 Pointer to a byte array storing the IPv4 address of the 
+		 *              destination server as a string, for example:
+		 *              char ipv4[] = "168.134.102.18";  
+		 * @param port Destination server port
+         * @return Indicates success or failure reason
+         */
 		int set_coap_ip_port(char *ipv4, uint16_t port);
 
+		/** Set URI option in the PDU
+         *
+		 * @param *uri Pointer to a byte array storing the URI, for example:
+		 *             char uri[] = "http://coap.me:5683/sink";
+         * @return Indicates success or failure reason
+         */
 		int set_coap_uri(char *uri);
 
+		/** Add the URI host option to the Protocol Data Unit (PDU) header
+         *
+         * @return Indicates success or failure reason
+         */
 		int pdu_header_add_uri_host();
 
+		/** Add the URI port option to the Protocol Data Unit (PDU) header
+         *
+         * @return Indicates success or failure reason
+         */
 		int pdu_header_add_uri_port();
 
+		/** Add the URI path option to the Protocol Data Unit (PDU) header
+         *
+         * @return Indicates success or failure reason
+         */
 		int pdu_header_add_uri_path();
 
+		/** Add the URI query option to the Protocol Data Unit (PDU) header
+         *
+         * @return Indicates success or failure reason
+         */
 		int pdu_header_add_uri_query();
 
+		/** Remove the URI host option to the Protocol Data Unit (PDU) header
+         *
+         * @return Indicates success or failure reason
+         */
 		int pdu_header_remove_uri_host();
 
+		/** Remove the URI port option to the Protocol Data Unit (PDU) header
+         *
+         * @return Indicates success or failure reason
+         */
 		int pdu_header_remove_uri_port();
 
+		/** Remove the URI path option to the Protocol Data Unit (PDU) header
+         *
+         * @return Indicates success or failure reason
+         */
 		int pdu_header_remove_uri_path();
 
+		/** Remove the URI query option to the Protocol Data Unit (PDU) header
+         *
+         * @return Indicates success or failure reason
+         */
 		int pdu_header_remove_uri_query();
 
+		/** Select CoAP component for AT use. Because the Sara module's internal 
+		 *  CoAP library is shared with other components in the module, we must 
+		 *  explicity select the right CoAP component before use
+		 * 
+		 * @return Indicates success or failure reason
+		 */  
 		int select_coap_at_interface();
 
 		int coap_get();

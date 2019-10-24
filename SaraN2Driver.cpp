@@ -9,7 +9,17 @@
  */
 #include "SaraN2Driver.h"
 
-
+/** Constructor for the SaraN2 class. Instantiates an ATCmdParser object
+ *  on the heap for comms between microcontroller and modem
+ * 
+ * @param txu Pin connected to SaraN2 TXD (This is MCU TXU)
+ * @param rxu Pin connected to SaraN2 RXD (This is MCU RXU)
+ * @param cts Pin connected to SaraN2 CTS
+ * @param rst Pin connected to SaraN2 RST
+ * @param vint Pin conencted to SaraN2 VINT
+ * @param gpio Pin connected to SaraN2 GPIO1
+ * @param baud Baud rate for UART between MCU and SaraN2
+ */  
 SaraN2::SaraN2(PinName txu, PinName rxu, PinName cts, PinName rst, PinName vint, 
                PinName gpio, int baud) :
 			   _cts(cts), _rst(rst, 1), _vint(vint), _gpio(gpio)
@@ -20,7 +30,9 @@ SaraN2::SaraN2(PinName txu, PinName rxu, PinName cts, PinName rst, PinName vint,
 	_parser->set_timeout(500);
 }
 
-
+/** Destructor for the SaraN2 class. Deletes the UARTSerial and ATCmdParser
+ *  objects from the heap to release unused memory
+ */  
 SaraN2::~SaraN2()
 {
 	delete _serial;
@@ -116,7 +128,13 @@ int SaraN2::save_profile(uint8_t profile)
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Set valid flag of profile to either valid or invalid. Only valid profiles
+ *  can be used for CoAP operations.
+ *
+ * @param valid Use enumerated values PROFILE_VALID or PROFILE_INVALID 
+ *              to set validity flag
+ * @return Indicates success or failure reason
+ */
 int SaraN2::set_profile_validity(uint8_t valid)
 {
 	if(valid > 1)
@@ -135,7 +153,14 @@ int SaraN2::set_profile_validity(uint8_t valid)
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Set destination IP address and CoAP port to which to send message
+ *
+ * @param *ipv4 Pointer to a byte array storing the IPv4 address of the 
+ *              destination server as a string, for example:
+ *              char ipv4[] = "168.134.102.18";  
+ * @param port Destination server port
+ * @return Indicates success or failure reason
+ */
 int SaraN2::set_coap_ip_port(char *ipv4, uint16_t port)
 {
 	_parser->flush();
@@ -149,7 +174,12 @@ int SaraN2::set_coap_ip_port(char *ipv4, uint16_t port)
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Set URI option in the PDU
+ *
+ * @param *uri Pointer to a byte array storing the URI, for example:
+ *             char uri[] = "http://coap.me:5683/sink";
+ * @return Indicates success or failure reason
+ */
 int SaraN2::set_coap_uri(char *uri)
 {
 	int uri_length = sizeof(uri) / sizeof(uri[0]);
@@ -170,7 +200,10 @@ int SaraN2::set_coap_uri(char *uri)
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Add the URI host option to the Protocol Data Unit (PDU) header
+ *
+ * @return Indicates success or failure reason
+ */
 int SaraN2::pdu_header_add_uri_host()
 {
 	_parser->flush();
@@ -184,7 +217,10 @@ int SaraN2::pdu_header_add_uri_host()
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Add the URI port option to the Protocol Data Unit (PDU) header
+ *
+ * @return Indicates success or failure reason
+ */
 int SaraN2::pdu_header_add_uri_port()
 {
 	_parser->flush();
@@ -198,7 +234,10 @@ int SaraN2::pdu_header_add_uri_port()
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Add the URI path option to the Protocol Data Unit (PDU) header
+ *
+ * @return Indicates success or failure reason
+ */
 int SaraN2::pdu_header_add_uri_path()
 {
 	_parser->flush();
@@ -212,7 +251,10 @@ int SaraN2::pdu_header_add_uri_path()
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Add the URI query option to the Protocol Data Unit (PDU) header
+ *
+ * @return Indicates success or failure reason
+ */
 int SaraN2::pdu_header_add_uri_query()
 {
 	_parser->flush();
@@ -226,7 +268,10 @@ int SaraN2::pdu_header_add_uri_query()
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Remove the URI host option to the Protocol Data Unit (PDU) header
+ *
+ * @return Indicates success or failure reason
+ */
 int SaraN2::pdu_header_remove_uri_host()
 {
 	_parser->flush();
@@ -240,7 +285,10 @@ int SaraN2::pdu_header_remove_uri_host()
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Remove the URI port option to the Protocol Data Unit (PDU) header
+ *
+ * @return Indicates success or failure reason
+ */
 int SaraN2::pdu_header_remove_uri_port()
 {
 	_parser->flush();
@@ -254,7 +302,10 @@ int SaraN2::pdu_header_remove_uri_port()
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Remove the URI path option to the Protocol Data Unit (PDU) header
+ *
+ * @return Indicates success or failure reason
+ */
 int SaraN2::pdu_header_remove_uri_path()
 {
 	_parser->flush();
@@ -268,7 +319,10 @@ int SaraN2::pdu_header_remove_uri_path()
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Remove the URI query option to the Protocol Data Unit (PDU) header
+ *
+ * @return Indicates success or failure reason
+ */
 int SaraN2::pdu_header_remove_uri_query()
 {
 	_parser->flush();
@@ -282,7 +336,12 @@ int SaraN2::pdu_header_remove_uri_query()
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Select CoAP component for AT use. Because the Sara module's internal 
+ *  CoAP library is shared with other components in the module, we must 
+ *  explicity select the right CoAP component before use
+ * 
+ * @return Indicates success or failure reason
+ */  
 int SaraN2::select_coap_at_interface()
 {
 	_parser->flush();
