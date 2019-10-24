@@ -22,12 +22,15 @@ class SaraN2
 
 		enum
 		{
-			SARAN2_OK = 0
+			SARAN2_OK = 0,
+			FAIL_AT   = 1
 		};
 
 		SaraN2(PinName txu, PinName rxu, PinName cts, PinName rst, PinName vint, PinName gpio, int baud = 57600);
 
 		~SaraN2();
+
+		int at();
 
 	private:
 
