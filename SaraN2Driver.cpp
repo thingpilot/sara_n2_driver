@@ -96,3 +96,22 @@ int SaraN2::save_profile(uint8_t profile)
 
 	return SaraN2::SARAN2_OK;
 }
+
+
+int SaraN2::set_profile_validity(uint8_t valid)
+{
+	if(valid > 1)
+	{
+		return SaraN2::VALUE_OUT_OF_BOUNDS;
+	}
+	
+	_parser->flush();
+
+	_parser->send("AT+UCOAP=4,\"%d\"", valid);
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_SET_PROFILE_VALIDITY;
+	}
+
+	return SaraN2::SARAN2_OK;
+}
