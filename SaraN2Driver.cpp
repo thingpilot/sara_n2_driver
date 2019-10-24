@@ -276,3 +276,27 @@ int SaraN2::select_coap_at_interface()
 
 	return SaraN2::SARAN2_OK;
 }
+
+
+int SaraN2::coap_get()
+{
+	return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::coap_delete()
+{
+	return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::coap_put()
+{
+	return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::coap_post()
+{
+	return SaraN2::SARAN2_OK;
+}

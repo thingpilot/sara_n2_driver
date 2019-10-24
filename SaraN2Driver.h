@@ -118,6 +118,14 @@ class SaraN2
 
 		int select_coap_at_interface();
 
+		int coap_get();
+
+		int coap_delete();
+
+		int coap_put();
+
+		int coap_post();
+
 	private:
 
 		DigitalIn  _cts;
