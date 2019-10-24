@@ -20,11 +20,23 @@ class SaraN2
 
 	public:
 
-		SaraN2();
+		enum
+		{
+			SARAN2_OK = 0
+		};
+
+		SaraN2(PinName txu, PinName rxu, PinName cts, PinName rst, PinName vint, PinName gpio, int baud = 57600);
 
 		~SaraN2();
 
 	private:
 
+		DigitalIn  _cts;
+		DigitalOut _rst;
+		DigitalIn  _vint;
+		DigitalIn  _gpio;
+
+		UARTSerial  *_serial;
+        ATCmdParser *_parser;
 };
 
