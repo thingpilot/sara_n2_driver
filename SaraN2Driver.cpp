@@ -397,7 +397,18 @@ int SaraN2::coap_delete()
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Perform a PUT request using CoAP and save the returned 
+ *  data into recv_data
+ * 
+ * @param *send_data Pointer to a byte array containing the 
+ *                   data to be sent to the server
+ * @param *recv_data Pointer to a byte array where the data 
+ *                   returned from the server will be stored
+ * @param data_intenfier Integer value representing the data 
+ *                       format type. Possible values are enumerated
+ *                       in the header file, i.e. TEXT_PLAIN
+ * @return Indicates success or failure reason
+ */ 
 int SaraN2::coap_put(char *send_data, char *recv_data, int data_indentifier)
 {
 	_parser->flush();
@@ -415,7 +426,18 @@ int SaraN2::coap_put(char *send_data, char *recv_data, int data_indentifier)
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Perform a POST request using CoAP and save the returned 
+ *  data into recv_data
+ * 
+ * @param *send_data Pointer to a byte array containing the 
+ *                   data to be sent to the server
+ * @param *recv_data Pointer to a byte array where the data 
+ *                   returned from the server will be stored
+ * @param data_intenfier Integer value representing the data 
+ *                       format type. Possible values are enumerated
+ *                       in the header file, i.e. TEXT_PLAIN
+ * @return Indicates success or failure reason
+ */ 
 int SaraN2::coap_post(char *send_data, char *recv_data, int data_indentifier)
 {
 	_parser->flush();
