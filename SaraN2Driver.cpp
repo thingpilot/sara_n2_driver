@@ -355,27 +355,45 @@ int SaraN2::select_coap_at_interface()
 	return SaraN2::SARAN2_OK;
 }
 
-
-int SaraN2::coap_get()
+/** Perform a GET request using CoAP and save the returned 
+ *  data into recv_data
+ * 
+ * @param *recv_data Pointer to a byte array where the data 
+ *                   returned from the server will be stored
+ * @return Indicates success or failure reason
+ */ 
+int SaraN2::coap_get(char *recv_data)
 {
+	_parser->flush();
+
+	_parser->send("AT+UCOAPC=1");
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_START_GET_REQUEST;
+	}
+
+	// Here we can handle the server's response
 	return SaraN2::SARAN2_OK;
 }
 
 
 int SaraN2::coap_delete()
 {
+	// AT+UCOAPC=2
 	return SaraN2::SARAN2_OK;
 }
 
 
 int SaraN2::coap_put()
 {
+	// AT+UCOAPC=3
 	return SaraN2::SARAN2_OK;
 }
 
 
 int SaraN2::coap_post()
 {
+	// AT+UCOAPC=4
 	return SaraN2::SARAN2_OK;
 }
 

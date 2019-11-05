@@ -2,7 +2,7 @@
   * @file    SaraN2Driver.h
   * @version 0.1.0
   * @author  Adam Mitchell
-  * @brief   Header file of the  NB-IoT driver module
+  * @brief   Header file of the NB-IoT driver module
   */
 
 /** Define to prevent recursive inclusion
@@ -50,7 +50,8 @@ class SaraN2
 			FAIL_REMOVE_URI_QUERY_PDU     = 18,
 			FAIL_SELECT_COAP_AT_INTERFACE = 19,
 			FAIL_REBOOT                   = 20,
-			FAIL_CONFIGURE_UE             = 21
+			FAIL_CONFIGURE_UE             = 21,
+			FAIL_START_GET_REQUEST        = 22
 		};
 
 		/** List of available CoAP profiles
@@ -249,6 +250,13 @@ class SaraN2
 		 */  
 		int select_coap_at_interface();
 
+		/** Perform a GET request using CoAP and save the returned 
+		 *  data into recv_data
+		 * 
+		 * @param *recv_data Pointer to a byte array where the data 
+		 *                   returned from the server will be stored
+		 * @return Indicates success or failure reason
+		 */ 
 		int coap_get();
 
 		int coap_delete();
