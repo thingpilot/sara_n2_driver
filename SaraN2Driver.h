@@ -264,9 +264,9 @@ class SaraN2
 
 		int coap_delete();
 
-		int coap_put();
+		int coap_put(char *send_data, char *recv_data, int data_indentifier);
 
-		int coap_post();
+		int coap_post(char *send_data, char *recv_data, int data_indentifier);
 
 		/** Reboots the module. After receiving the 'REBOOTING' response, no further
 		 *  AT commands will be processed until the module has successfully power on
