@@ -375,27 +375,61 @@ int SaraN2::coap_get(char *recv_data)
 	_parser->set_timeout(10000);
 	// Here we can handle the server's response
 	_parser->set_timeout(500);
+	
 	return SaraN2::SARAN2_OK;
 }
 
 
 int SaraN2::coap_delete()
 {
-	// AT+UCOAPC=2
+	_parser->flush();
+
+	_parser->send("AT+UCOAPC=2");
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_START_DELETE_REQUEST;
+	}
+
+	_parser->set_timeout(10000);
+	// Here we can handle the server's response
+	_parser->set_timeout(500);
+
 	return SaraN2::SARAN2_OK;
 }
 
 
 int SaraN2::coap_put()
 {
-	// AT+UCOAPC=3
+	_parser->flush();
+
+	_parser->send("AT+UCOAPC=3");
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_START_PUT_REQUEST;
+	}
+
+	_parser->set_timeout(10000);
+	// Here we can handle the server's response
+	_parser->set_timeout(500);
+
 	return SaraN2::SARAN2_OK;
 }
 
 
 int SaraN2::coap_post()
 {
-	// AT+UCOAPC=4
+	_parser->flush();
+
+	_parser->send("AT+UCOAPC=4");
+	if(!_parser->recv("OK"))
+	{
+		return SaraN2::FAIL_START_POST_REQUEST;
+	}
+
+	_parser->set_timeout(10000);
+	// Here we can handle the server's response
+	_parser->set_timeout(500);
+
 	return SaraN2::SARAN2_OK;
 }
 

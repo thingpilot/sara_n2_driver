@@ -51,7 +51,10 @@ class SaraN2
 			FAIL_SELECT_COAP_AT_INTERFACE = 19,
 			FAIL_REBOOT                   = 20,
 			FAIL_CONFIGURE_UE             = 21,
-			FAIL_START_GET_REQUEST        = 22
+			FAIL_START_GET_REQUEST        = 22,
+			FAIL_START_DELETE_REQUEST     = 23,
+			FAIL_START_PUT_REQUEST        = 24,
+			FAIL_START_POST_REQUEST       = 25
 		};
 
 		/** List of available CoAP profiles
@@ -257,7 +260,7 @@ class SaraN2
 		 *                   returned from the server will be stored
 		 * @return Indicates success or failure reason
 		 */ 
-		int coap_get();
+		int coap_get(char *recv_data);
 
 		int coap_delete();
 
