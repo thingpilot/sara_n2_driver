@@ -379,8 +379,14 @@ int SaraN2::coap_get(char *recv_data)
 	return SaraN2::SARAN2_OK;
 }
 
-
-int SaraN2::coap_delete()
+/** Perform a DELETE request using CoAP and save the returned 
+ *  data into recv_data
+ * 
+ * @param *recv_data Pointer to a byte array where the data 
+ *                   returned from the server will be stored
+ * @return Indicates success or failure reason
+ */ 
+int SaraN2::coap_delete(char *recv_data)
 {
 	_parser->flush();
 
