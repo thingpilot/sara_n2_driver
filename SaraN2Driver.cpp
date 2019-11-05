@@ -372,7 +372,9 @@ int SaraN2::coap_get(char *recv_data)
 		return SaraN2::FAIL_START_GET_REQUEST;
 	}
 
+	_parser->set_timeout(10000);
 	// Here we can handle the server's response
+	_parser->set_timeout(500);
 	return SaraN2::SARAN2_OK;
 }
 
