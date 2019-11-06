@@ -355,6 +355,24 @@ int SaraN2::select_coap_at_interface()
 	return SaraN2::SARAN2_OK;
 }
 
+/** Parse response from CoAP server into recv_data
+ * 
+ * @param *recv_data Pointer to a byte array where the data
+ *                   returned from the server will be stored
+ * @param timeout_ms Timeout value for the parser in milliseconds
+ * @return Indicates success or failure reason
+ */
+int SaraN2::parse_coap_response(char *recv_data, uint16_t timeout)
+{
+	_parser->set_timeout(timeout);
+
+	// Parse response into recv_data here
+
+	_parser->set_timeout(500);
+
+	return SaraN2::SARAN2_OK;
+}
+
 /** Perform a GET request using CoAP and save the returned 
  *  data into recv_data
  * 
@@ -372,9 +390,10 @@ int SaraN2::coap_get(char *recv_data)
 		return SaraN2::FAIL_START_GET_REQUEST;
 	}
 
-	_parser->set_timeout(10000);
-	// Here we can handle the server's response
-	_parser->set_timeout(500);
+	if(parse_coap_response(recv_data) != SaraN2::SARAN2_OK)
+	{
+		return SaraN2::FAIL_PARSE_RESPONSE;
+	}
 
 	return SaraN2::SARAN2_OK;
 }
@@ -396,9 +415,10 @@ int SaraN2::coap_delete(char *recv_data)
 		return SaraN2::FAIL_START_DELETE_REQUEST;
 	}
 
-	_parser->set_timeout(10000);
-	// Here we can handle the server's response
-	_parser->set_timeout(500);
+	if(parse_coap_response(recv_data) != SaraN2::SARAN2_OK)
+	{
+		return SaraN2::FAIL_PARSE_RESPONSE;
+	}
 
 	return SaraN2::SARAN2_OK;
 }
@@ -425,9 +445,10 @@ int SaraN2::coap_put(char *send_data, char *recv_data, int data_indentifier)
 		return SaraN2::FAIL_START_PUT_REQUEST;
 	}
 
-	_parser->set_timeout(10000);
-	// Here we can handle the server's response
-	_parser->set_timeout(500);
+	if(parse_coap_response(recv_data) != SaraN2::SARAN2_OK)
+	{
+		return SaraN2::FAIL_PARSE_RESPONSE;
+	}
 
 	return SaraN2::SARAN2_OK;
 }
@@ -454,9 +475,10 @@ int SaraN2::coap_post(char *send_data, char *recv_data, int data_indentifier)
 		return SaraN2::FAIL_START_POST_REQUEST;
 	}
 
-	_parser->set_timeout(10000);
-	// Here we can handle the server's response
-	_parser->set_timeout(500);
+	if(parse_coap_response(recv_data) != SaraN2::SARAN2_OK)
+	{
+		return SaraN2::FAIL_PARSE_RESPONSE;
+	}
 
 	return SaraN2::SARAN2_OK;
 }
@@ -474,7 +496,7 @@ int SaraN2::reboot_module()
 	_parser->send("AT+NRB");
 	if(!_parser->recv("REBOOTING"))
 	{
-		SaraN2::FAIL_REBOOT;
+		return SaraN2::FAIL_REBOOT;
 	}
 
 	return SaraN2::SARAN2_OK;

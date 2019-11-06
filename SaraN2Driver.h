@@ -54,7 +54,8 @@ class SaraN2
 			FAIL_START_GET_REQUEST        = 22,
 			FAIL_START_DELETE_REQUEST     = 23,
 			FAIL_START_PUT_REQUEST        = 24,
-			FAIL_START_POST_REQUEST       = 25
+			FAIL_START_POST_REQUEST       = 25,
+			FAIL_PARSE_RESPONSE           = 26
 		};
 
 		/** List of available CoAP profiles
@@ -252,6 +253,15 @@ class SaraN2
 		 * @return Indicates success or failure reason
 		 */  
 		int select_coap_at_interface();
+
+		/** Parse response from CoAP server into recv_data
+		 * 
+		 * @param *recv_data Pointer to a byte array where the data
+		 *                   returned from the server will be stored
+		 * @param timeout_ms Timeout value for the parser in milliseconds
+		 * @return Indicates success or failure reason
+		 */
+		int parse_coap_response(char *recv_data, uint16_t timeout_ms = 10000);
 
 		/** Perform a GET request using CoAP and save the returned 
 		 *  data into recv_data
