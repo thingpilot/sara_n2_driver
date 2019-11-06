@@ -361,5 +361,6 @@ class SaraN2
 
 		UARTSerial  *_serial;
         ATCmdParser *_parser;
+		Mutex _smutex;
 };
 

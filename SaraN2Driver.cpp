@@ -45,13 +45,18 @@ SaraN2::~SaraN2()
  */
 int SaraN2::at()
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT");
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_AT;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -69,13 +74,18 @@ int SaraN2::select_profile(uint8_t profile)
 		return SaraN2::INVALID_PROFILE;
 	}
 
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=3,\"%d\"", profile);
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_SELECT_PROFILE;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -93,13 +103,18 @@ int SaraN2::load_profile(uint8_t profile)
 		return SaraN2::INVALID_PROFILE;
 	}
 
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=5,\"%d\"", profile);
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_LOAD_PROFILE;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -117,13 +132,18 @@ int SaraN2::save_profile(uint8_t profile)
 		return SaraN2::INVALID_PROFILE;
 	}
 
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=6,\"%d\"", profile);
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_SAVE_PROFILE;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -142,13 +162,18 @@ int SaraN2::set_profile_validity(uint8_t valid)
 		return SaraN2::VALUE_OUT_OF_BOUNDS;
 	}
 
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=4,\"%d\"", valid);
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_SET_PROFILE_VALIDITY;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -163,13 +188,18 @@ int SaraN2::set_profile_validity(uint8_t valid)
  */
 int SaraN2::set_coap_ip_port(char *ipv4, uint16_t port)
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=0,\"%s\",\"%d\"", ipv4, port);
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_SET_COAP_IP_PORT;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -189,13 +219,18 @@ int SaraN2::set_coap_uri(char *uri)
 		return SaraN2::URI_TOO_LONG;
 	}
 
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=1,\"%s\"", uri);
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_SET_COAP_URI;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -206,13 +241,18 @@ int SaraN2::set_coap_uri(char *uri)
  */
 int SaraN2::pdu_header_add_uri_host()
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=2,\"0\",\"1\"");
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_ADD_URI_HOST_PDU;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -223,13 +263,18 @@ int SaraN2::pdu_header_add_uri_host()
  */
 int SaraN2::pdu_header_add_uri_port()
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=2,\"1\",\"1\"");
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_ADD_URI_PORT_PDU;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -240,13 +285,18 @@ int SaraN2::pdu_header_add_uri_port()
  */
 int SaraN2::pdu_header_add_uri_path()
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=2,\"2\",\"1\"");
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_ADD_URI_PATH_PDU;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -257,13 +307,18 @@ int SaraN2::pdu_header_add_uri_path()
  */
 int SaraN2::pdu_header_add_uri_query()
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=2,\"3\",\"1\"");
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_ADD_URI_QUERY_PDU;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -274,13 +329,18 @@ int SaraN2::pdu_header_add_uri_query()
  */
 int SaraN2::pdu_header_remove_uri_host()
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=2,\"0\",\"0\"");
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_REMOVE_URI_HOST_PDU;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -291,13 +351,18 @@ int SaraN2::pdu_header_remove_uri_host()
  */
 int SaraN2::pdu_header_remove_uri_port()
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=2,\"1\",\"0\"");
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_REMOVE_URI_PORT_PDU;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -308,13 +373,18 @@ int SaraN2::pdu_header_remove_uri_port()
  */
 int SaraN2::pdu_header_remove_uri_path()
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=2,\"2\",\"0\"");
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_REMOVE_URI_PATH_PDU;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -325,13 +395,18 @@ int SaraN2::pdu_header_remove_uri_path()
  */
 int SaraN2::pdu_header_remove_uri_query()
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAP=2,\"3\",\"0\"");
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_REMOVE_URI_QUERY_PDU;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -344,13 +419,18 @@ int SaraN2::pdu_header_remove_uri_query()
  */  
 int SaraN2::select_coap_at_interface()
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+USELCP=1");
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_SELECT_COAP_AT_INTERFACE;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -382,18 +462,24 @@ int SaraN2::parse_coap_response(char *recv_data, uint16_t timeout)
  */ 
 int SaraN2::coap_get(char *recv_data)
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAPC=1");
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_START_GET_REQUEST;
 	}
 
 	if(parse_coap_response(recv_data) != SaraN2::SARAN2_OK)
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_PARSE_RESPONSE;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -407,18 +493,24 @@ int SaraN2::coap_get(char *recv_data)
  */ 
 int SaraN2::coap_delete(char *recv_data)
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAPC=2");
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_START_DELETE_REQUEST;
 	}
 
 	if(parse_coap_response(recv_data) != SaraN2::SARAN2_OK)
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_PARSE_RESPONSE;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -437,18 +529,24 @@ int SaraN2::coap_delete(char *recv_data)
  */ 
 int SaraN2::coap_put(char *send_data, char *recv_data, int data_indentifier)
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAPC=3,\"%s\",%i", send_data, data_indentifier);
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_START_PUT_REQUEST;
 	}
 
 	if(parse_coap_response(recv_data) != SaraN2::SARAN2_OK)
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_PARSE_RESPONSE;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -467,18 +565,24 @@ int SaraN2::coap_put(char *send_data, char *recv_data, int data_indentifier)
  */ 
 int SaraN2::coap_post(char *send_data, char *recv_data, int data_indentifier)
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+UCOAPC=4,\"%s\",%i", send_data, data_indentifier);
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_START_POST_REQUEST;
 	}
 
 	if(parse_coap_response(recv_data) != SaraN2::SARAN2_OK)
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_PARSE_RESPONSE;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -491,13 +595,18 @@ int SaraN2::coap_post(char *send_data, char *recv_data, int data_indentifier)
  */
 int SaraN2::reboot_module()
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+NRB");
 	if(!_parser->recv("REBOOTING"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_REBOOT;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -511,13 +620,18 @@ int SaraN2::reboot_module()
  */ 
 int SaraN2::configure_ue(uint8_t function, uint8_t value)
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+NCONFIG=\"%s\",\"%s\"", config_functions[function], config_values[value]);
 	if(!_parser->recv("OK"))
 	{
+		_smutex.unlock();
 		return SaraN2::FAIL_CONFIGURE_UE;
 	}
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -529,11 +643,15 @@ int SaraN2::configure_ue(uint8_t function, uint8_t value)
  */
 int SaraN2::nuestats(uint8_t type)
 {
+	_smutex.lock();
+
 	_parser->flush();
 
 	_parser->send("AT+NUESTATS=\"%s\"", nuestats_types[type]);
 
 	/* Do stuff here to parse NUESTATS output */
+
+	_smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
