@@ -447,6 +447,12 @@ int SaraN2::parse_coap_response(char *recv_data, uint16_t timeout)
 	_parser->set_timeout(timeout);
 
 	// Parse response into recv_data here
+	/*
+	if(_parser->recv("+UCOAPCD:"))
+	{
+
+	}
+	*/
 
 	_parser->set_timeout(500);
 
