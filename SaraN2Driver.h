@@ -55,7 +55,9 @@ class SaraN2
 			FAIL_START_DELETE_REQUEST     = 23,
 			FAIL_START_PUT_REQUEST        = 24,
 			FAIL_START_POST_REQUEST       = 25,
-			FAIL_PARSE_RESPONSE           = 26
+			FAIL_PARSE_RESPONSE           = 26,
+            FAIL_GET_CSCON                = 27,
+            FAIL_GET_CEREG                = 28          
 		};
 
 		/** List of available CoAP profiles
@@ -111,16 +113,61 @@ class SaraN2
 			FALSE = 1
 		};
 
-		/** Enumerated list of AT+NUESTATS types
-		 */
-		enum
-		{
-			RADIO   = 0,
-			CELL    = 1,
-			BLER    = 2,
-			APPSMEM = 3,
-			THP     = 4
-		};
+        /** Enumerated list of network registration statuses
+         */
+        enum
+        {
+            NOT_REGISTERED_NOT_SEARCHING = 0,
+            REGISTERED_HOME_NETWORK      = 1,
+            NOT_REGISTERED_SEARCHING     = 2,
+            REGISTRATION_DENIED          = 3,
+            UNKNOWN                      = 4,
+            REGISTERED_ROAMING           = 5,
+            ATTACHED_EMERGENCY_BEARER    = 8
+        };
+
+        /** Enumerated list of CSCON connection values
+         */
+        enum
+        {
+            IDLE      = 0,
+            CONNECTED = 1
+        };
+
+        enum
+        {
+            SIGNAL_POWER = 0,
+            TOTAL_POWER  = 1,
+            TX_POWER     = 2,
+            TX_TIME      = 3,
+            RX_TIME      = 4,
+            CELL_ID      = 5,
+            ECL          = 6,
+            SNR          = 7,
+            EARFCN       = 8,
+            PCI          = 9,
+            RSRQ         = 10
+        };
+
+        union Nuestats_t
+        {
+            struct
+            {
+                int signal_power; 
+                int total_power;  
+                int tx_power;     
+                int tx_time;      
+                int rx_time;      
+                int cell_id;      
+                int ecl;          
+                int snr;          
+                int earfcn;       
+                int pci;          
+                int rsrq;         
+            } parameters;
+
+            char data[44];
+        };
 
 		/** Constructor for the SaraN2 class. Instantiates an ATCmdParser object
 		 *  on the heap for comms between microcontroller and modem
@@ -325,12 +372,32 @@ class SaraN2
 		 */ 
 		int configure_ue(uint8_t function, uint8_t value);
 
+        /** Determine whether +CEREG URC is enabled and the current
+         *  network registration status of the device
+         *
+         * @param &urc Address of integer in which to store URC value
+         * @param &connected Address of integer in which to store network
+         *                   registration status value
+         * @return Indicates success or failure reason
+         */
+        int cereg(int &urc, int &status);
+
+        /** Determine whether +CSCON URC is enabled and the current
+         *  radio connection status of the device
+         *
+         * @param &urc Address of integer in which to store URC value
+         * @param &connected Address of integer in which to store connected value
+         * @return Indicates success or failure reason
+         */
+        int cscon(int &urc, int &connected);
+
 		/** Return operation stats, of a given type, of the module
-		 * 
-		 * @param type Enumerated type of the AT+NUESTATS types to query
-		 * @return Indicates success or failure reason
-		 */
-		int nuestats(uint8_t type);
+         * 
+         * @param *data Point to .data parameter of Nuestats_t struct
+         *              to copy data into
+         * @return Indicates success or failure reason
+         */
+		int nuestats(char *data);
 
 	private:
 
@@ -347,12 +414,6 @@ class SaraN2
 		 *  config_values[TRUE];
 		 */
 		const char *config_values[2] = { "TRUE", "FALSE" };
-
-		/** Potential AT+NUESTATS type arguments, to be access using the enumerated
-		 *  type that corresponds to the index of the type you wish to use, i.e:
-		 *  nuestats_types[RADIO];
-		 */
-		const char *nuestats_types[5] = { "RADIO", "CELL", "BLER", "APPSMEM", "THP" };
 
 		DigitalIn  _cts;
 		DigitalOut _rst;

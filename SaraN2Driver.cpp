@@ -642,22 +642,122 @@ int SaraN2::configure_ue(uint8_t function, uint8_t value)
 	return SaraN2::SARAN2_OK;
 }
 
-/** Return operation stats, of a given type, of the module
- * 
- * @param type Enumerated type of the AT+NUESTATS types to query
+/** Determine whether +CEREG URC is enabled and the current
+ *  network registration status of the device
+ *
+ * @param &urc Address of integer in which to store URC value
+ * @param &connected Address of integer in which to store network
+ *                   registration status value
  * @return Indicates success or failure reason
  */
-int SaraN2::nuestats(uint8_t type)
+int SaraN2::cereg(int &urc, int &status)
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CEREG?");
+
+    if(!_parser->recv("+CEREG: %d,%d", &urc, &status) || !_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_GET_CEREG;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
+
+/** Determine whether +CSCON URC is enabled and the current
+ *  radio connection status of the device
+ *
+ * @param &urc Address of integer in which to store URC value
+ * @param &connected Address of integer in which to store connected value
+ * @return Indicates success or failure reason
+ */
+int SaraN2::cscon(int &urc, int &connected)
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CSCON?");
+
+    if(!_parser->recv("+CSCON: %d,%d", &urc, &connected) || !_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_GET_CSCON;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
+
+/** Return operation stats, of a given type, of the module
+ * 
+ * @param *data Point to .data parameter of Nuestats_t struct
+ *              to copy data into
+ * @return Indicates success or failure reason
+ */
+int SaraN2::nuestats(char *data)
 {
 	_smutex.lock();
 
 	_parser->flush();
 
-	_parser->send("AT+NUESTATS=\"%s\"", nuestats_types[type]);
+	_parser->send("AT+NUESTATS");
 
-	/* Do stuff here to parse NUESTATS output */
+    int capture_byte = -1;
+    char buffer[16];
+    uint8_t buffer_index = 0;
+    int parameter = SaraN2::SIGNAL_POWER;
+
+    _parser->set_timeout(100);
+
+    for(int i = 0; i < 200; i++)
+    {
+        int byte = _parser->getc();
+
+        if(byte == -1) // No more data in buffer
+        {
+            break;
+        }
+        else if(byte == 44) // Comma
+        {
+            capture_byte = i + 1;
+            buffer_index = 0;
+            continue;
+        }
+        else if(byte == 13 && buffer_index > 0) // CR
+        {
+            int value = atoi(buffer);
+            memcpy(&data[4 * parameter], &value, sizeof(int));
+            memset(buffer, 0, sizeof(buffer));
+            parameter++;
+
+            capture_byte = -1;
+            buffer_index = 0;
+
+            continue;
+        }
+        else if(byte == 10) // LF
+        {
+            continue;
+        }
+
+        if(capture_byte == i)
+        {
+            memcpy(&buffer[buffer_index], &byte, 1);
+            buffer_index++;
+            capture_byte++;
+        }
+    }
 
 	_smutex.unlock();
+
+    _parser->set_timeout(500);
 
 	return SaraN2::SARAN2_OK;
 }
