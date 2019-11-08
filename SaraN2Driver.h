@@ -227,11 +227,13 @@ class SaraN2
 
 		/** Set URI option in the PDU
          *
-		 * @param *uri Pointer to a byte array storing the URI, for example:
-		 *             char uri[] = "http://coap.me:5683/sink";
+         * @param *uri Pointer to a byte array storing the URI, for example:
+         *             char uri[] = "http://coap.me:5683/sink";
+         * @param uri_length Number of characters in URI, cannot be greater
+         *                   than 200
          * @return Indicates success or failure reason
          */
-		int set_coap_uri(char *uri);
+		int set_coap_uri(char *uri, uint8_t uri_length);
 
 		/** Add the URI host option to the Protocol Data Unit (PDU) header
          *

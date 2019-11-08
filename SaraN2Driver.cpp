@@ -208,12 +208,12 @@ int SaraN2::set_coap_ip_port(char *ipv4, uint16_t port)
  *
  * @param *uri Pointer to a byte array storing the URI, for example:
  *             char uri[] = "http://coap.me:5683/sink";
+ * @param uri_length Number of characters in URI, cannot be greater
+ *                   than 200
  * @return Indicates success or failure reason
  */
-int SaraN2::set_coap_uri(char *uri)
+int SaraN2::set_coap_uri(char *uri, uint8_t uri_length)
 {
-	int uri_length = sizeof(uri) / sizeof(uri[0]);
-
 	if(uri_length > 200)
 	{
 		return SaraN2::URI_TOO_LONG;
