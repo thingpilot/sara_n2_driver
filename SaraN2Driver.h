@@ -134,22 +134,10 @@ class SaraN2
             CONNECTED = 1
         };
 
-        enum
-        {
-            SIGNAL_POWER = 0,
-            TOTAL_POWER  = 1,
-            TX_POWER     = 2,
-            TX_TIME      = 3,
-            RX_TIME      = 4,
-            CELL_ID      = 5,
-            ECL          = 6,
-            SNR          = 7,
-            EARFCN       = 8,
-            PCI          = 9,
-            RSRQ         = 10
-        };
-
-        union Nuestats_t
+		/** Union to simplify the accesibility of values returned
+		 *  from AT+NUESTATS
+		 */
+		union Nuestats_t
         {
             struct
             {

@@ -712,7 +712,7 @@ int SaraN2::nuestats(char *data)
     int capture_byte = -1;
     char buffer[16];
     uint8_t buffer_index = 0;
-    int parameter = SaraN2::SIGNAL_POWER;
+    int parameter = 0;
 
     _parser->set_timeout(100);
 
