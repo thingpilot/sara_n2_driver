@@ -59,7 +59,8 @@ class SaraN2
             FAIL_GET_CSCON                = 27,
             FAIL_GET_CEREG                = 28,
 			FAIL_ENABLE_PSM               = 29,
-			FAIL_DISABLE_PSM              = 30          
+			FAIL_DISABLE_PSM              = 30,
+			FAIL_QUERY_PSM                = 31          
 		};
 
         /** CoAP response codes 
@@ -377,17 +378,27 @@ class SaraN2
 		 */
 		int reboot_module();
 
-		/** Enable modulde Power Save Mode (PSM)
+		/** Enable module Power Save Mode (PSM)
 		 * 
 		 * @return Indicates success or failure reason
 		 */
 		int enable_power_save_mode();
 
-		/** Disable modulde Power Save Mode (PSM)
+		/** Disable module Power Save Mode (PSM)
 		 * 
 		 * @return Indicates success or failure reason
 		 */
 		int disable_power_save_mode();
+
+		/** Query whether or not Power Save Mode (PSM) is enabled
+		 *  
+		 * @param &power_save_mode Address of integer in which to store
+		 *                         value of power save mode setting. 1 
+		 *                         means that PSM is enabled, 0 means 
+		 *                         that PSM is disable
+		 * @return Indicates success or failure reason
+		 */
+		int query_power_save_mode(int &power_save_mode);
 
 		/** Configure customisable aspects of the UE given the functions and values
 		 *  available in the enumerated list of AT+NCONFIG functions and values
