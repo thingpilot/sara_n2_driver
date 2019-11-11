@@ -449,14 +449,33 @@ int SaraN2::parse_coap_response(char *recv_data, uint16_t timeout)
 	int response_code = -1;
 	int more_block = -1;
 
-	if(!_parser->recv("+UCOAPCD:%d,\"(.*?)\",%d", &response_code, recv_data, &more_block))
-	{
-		return SaraN2::FAIL_PARSE_RESPONSE;
-	}
+    if(_parser->recv("+UCOAPCD: %d", &response_code))
+    {
+        _parser->set_timeout(100);
+
+        /* Max recv_data payload size is 512 bytes so allow for more_block and a 
+         * a few bytes to spare 
+         */
+        for(int i = 0; i < 520; i++)
+        {
+            int byte = _parser->getc();
+
+            if(byte == -1)
+            {
+                break;
+            }
+
+            memcpy(&recv_data[i], &byte, 1);
+        }
+
+        _parser->set_timeout(500);
+
+        return SaraN2::SARAN2_OK;   
+    }
 
 	_parser->set_timeout(500);
 
-	return SaraN2::SARAN2_OK;
+	return SaraN2::FAIL_PARSE_RESPONSE;
 }
 
 /** Perform a GET request using CoAP and save the returned 
