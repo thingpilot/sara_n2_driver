@@ -771,11 +771,13 @@ int SaraN2::set_t3412_timer(char *timer)
 	// get psm value
 	// get t3324 value
 	// set t3412
+
+	return SaraN2::SARAN2_OK;
 }
 
 int SaraN2::get_t3412_timer(char *timer)
 {
-
+	return SaraN2::SARAN2_OK;
 }
 
 
@@ -784,11 +786,12 @@ int SaraN2::set_t3324_timer(char *timer)
 	// get psm value
 	// get tt3412 value
 	// set t3324
+	return SaraN2::SARAN2_OK;
 }
 
 int SaraN2::get_t3324_timer(char *timer)
 {
-
+	return SaraN2::SARAN2_OK;
 }
 
 
