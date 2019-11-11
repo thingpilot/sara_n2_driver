@@ -658,7 +658,6 @@ int SaraN2::coap_post(char *send_data, char *recv_data, int data_indentifier, in
 	return SaraN2::SARAN2_OK;
 }
 
-
 /** Reboots the module. After receiving the 'REBOOTING' response, no further
  *  AT commands will be processed until the module has successfully power on
  *
@@ -693,6 +692,50 @@ int SaraN2::reboot_module()
         _smutex.unlock();
 		return SaraN2::FAIL_REBOOT;
     }
+}
+
+/** Enable modulde Power Save Mode (PSM)
+ * 
+ * @return Indicates success or failure reason
+ */
+int SaraN2::enable_power_save_mode()
+{
+	_smutex.lock();
+	
+	_parser->flush();
+
+	_parser->send("AT+CPSMS=1");
+	if(!_parser->recv("OK"))
+	{
+		_smutex.unlock();
+		return SaraN2::FAIL_ENABLE_PSM;
+	}
+
+	_smutex.unlock();
+
+	return SaraN2::SARAN2_OK;
+}
+
+/** Disable modulde Power Save Mode (PSM)
+ * 
+ * @return Indicates success or failure reason
+ */
+int SaraN2::disable_power_save_mode()
+{
+	_smutex.lock();
+	
+	_parser->flush();
+
+	_parser->send("AT+CPSMS=0");
+	if(!_parser->recv("OK"))
+	{
+		_smutex.unlock();
+		return SaraN2::FAIL_DISABLE_PSM;
+	}
+
+	_smutex.unlock();
+
+	return SaraN2::SARAN2_OK;
 }
 
 /** Configure customisable aspects of the UE given the functions and values
