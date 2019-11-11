@@ -671,15 +671,28 @@ int SaraN2::reboot_module()
 	_parser->flush();
 
 	_parser->send("AT+NRB");
-	if(!_parser->recv("REBOOTING"))
+	if(_parser->recv("REBOOTING"))
 	{
-		_smutex.unlock();
-		return SaraN2::FAIL_REBOOT;
+		_parser->set_timeout(10000);
+
+        if(_parser->recv("u-blox") && _parser->recv("OK"))
+        {
+            _parser->set_timeout(500);
+            _smutex.unlock();
+            return SaraN2::SARAN2_OK;
+        }
+        else
+        {
+            _parser->set_timeout(500);
+            _smutex.unlock();
+            return SaraN2::FAIL_REBOOT;
+        }
 	}
-
-	_smutex.unlock();
-
-	return SaraN2::SARAN2_OK;
+    else
+    {
+        _smutex.unlock();
+		return SaraN2::FAIL_REBOOT;
+    }
 }
 
 /** Configure customisable aspects of the UE given the functions and values
