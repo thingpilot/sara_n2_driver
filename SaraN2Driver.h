@@ -2,7 +2,7 @@
   * @file    SaraN2Driver.h
   * @version 0.1.0
   * @author  Adam Mitchell
-  * @brief   Header file of the  NB-IoT driver module
+  * @brief   Header file of the NB-IoT driver module
   */
 
 /** Define to prevent recursive inclusion
@@ -50,8 +50,25 @@ class SaraN2
 			FAIL_REMOVE_URI_QUERY_PDU     = 18,
 			FAIL_SELECT_COAP_AT_INTERFACE = 19,
 			FAIL_REBOOT                   = 20,
-			FAIL_CONFIGURE_UE             = 21
+			FAIL_CONFIGURE_UE             = 21,
+			FAIL_START_GET_REQUEST        = 22,
+			FAIL_START_DELETE_REQUEST     = 23,
+			FAIL_START_PUT_REQUEST        = 24,
+			FAIL_START_POST_REQUEST       = 25,
+			FAIL_PARSE_RESPONSE           = 26,
+            FAIL_GET_CSCON                = 27,
+            FAIL_GET_CEREG                = 28          
 		};
+
+        /** CoAP response codes 
+         */
+        enum
+        {
+            EMPTY_MESSAGE = 0,
+            SUCCESS       = 2,
+            CLIENT_ERROR  = 4,
+            SERVER_ERROR  = 5
+        };
 
 		/** List of available CoAP profiles
 		 */ 
@@ -106,16 +123,49 @@ class SaraN2
 			FALSE = 1
 		};
 
-		/** Enumerated list of AT+NUESTATS types
+        /** Enumerated list of network registration statuses
+         */
+        enum
+        {
+            NOT_REGISTERED_NOT_SEARCHING = 0,
+            REGISTERED_HOME_NETWORK      = 1,
+            NOT_REGISTERED_SEARCHING     = 2,
+            REGISTRATION_DENIED          = 3,
+            UNKNOWN                      = 4,
+            REGISTERED_ROAMING           = 5,
+            ATTACHED_EMERGENCY_BEARER    = 8
+        };
+
+        /** Enumerated list of CSCON connection values
+         */
+        enum
+        {
+            IDLE      = 0,
+            CONNECTED = 1
+        };
+
+		/** Union to simplify the accesibility of values returned
+		 *  from AT+NUESTATS
 		 */
-		enum
-		{
-			RADIO   = 0,
-			CELL    = 1,
-			BLER    = 2,
-			APPSMEM = 3,
-			THP     = 4
-		};
+		union Nuestats_t
+        {
+            struct
+            {
+                int signal_power; 
+                int total_power;  
+                int tx_power;     
+                int tx_time;      
+                int rx_time;      
+                int cell_id;      
+                int ecl;          
+                int snr;          
+                int earfcn;       
+                int pci;          
+                int rsrq;         
+            } parameters;
+
+            char data[44];
+        };
 
 		/** Constructor for the SaraN2 class. Instantiates an ATCmdParser object
 		 *  on the heap for comms between microcontroller and modem
@@ -187,11 +237,13 @@ class SaraN2
 
 		/** Set URI option in the PDU
          *
-		 * @param *uri Pointer to a byte array storing the URI, for example:
-		 *             char uri[] = "http://coap.me:5683/sink";
+         * @param *uri Pointer to a byte array storing the URI, for example:
+         *             char uri[] = "http://coap.me:5683/sink";
+         * @param uri_length Number of characters in URI, cannot be greater
+         *                   than 200
          * @return Indicates success or failure reason
          */
-		int set_coap_uri(char *uri);
+		int set_coap_uri(char *uri, uint8_t uri_length);
 
 		/** Add the URI host option to the Protocol Data Unit (PDU) header
          *
@@ -249,13 +301,72 @@ class SaraN2
 		 */  
 		int select_coap_at_interface();
 
-		int coap_get();
+		/** Parse response from CoAP server into recv_data
+         * 
+         * @param *recv_data Pointer to a byte array where the data
+         *                   returned from the server will be stored
+         * @param &response_code Address of integer where CoAP operation response code
+         *                       will be stored
+         * @param &more_block Address of integer where data more_block response
+         *                    will be stored
+         * @param timeout_ms Timeout value for the parser in milliseconds
+         * @return Indicates success or failure reason
+         */
+		int parse_coap_response(char *recv_data, int &response_code, int &more_block, uint16_t timeout_ms = 10000);
 
-		int coap_delete();
+		/** Perform a GET request using CoAP and save the returned 
+		 *  data into recv_data
+		 * 
+		 * @param *recv_data Pointer to a byte array where the data 
+		 *                   returned from the server will be stored
+         * @param &response_code Address of integer where CoAP operation response code
+         *                       will be stored
+		 * @return Indicates success or failure reason
+		 */ 
+		int coap_get(char *recv_data, int &response_code);
 
-		int coap_put();
+		/** Perform a DELETE request using CoAP and save the returned 
+		 *  data into recv_data
+		 * 
+		 * @param *recv_data Pointer to a byte array where the data 
+		 *                   returned from the server will be stored
+         * @param &response_code Address of integer where CoAP operation response code
+         *                       will be stored
+		 * @return Indicates success or failure reason
+		 */ 
+		int coap_delete(char *recv_data, int &response_code);
 
-		int coap_post();
+		/** Perform a PUT request using CoAP and save the returned 
+		 *  data into recv_data
+		 * 
+		 * @param *send_data Pointer to a byte array containing the 
+		 *                   data to be sent to the server
+		 * @param *recv_data Pointer to a byte array where the data 
+		 *                   returned from the server will be stored
+		 * @param data_intenfier Integer value representing the data 
+		 *                       format type. Possible values are enumerated
+		 *                       in the header file, i.e. TEXT_PLAIN
+         * @param &response_code Address of integer where CoAP operation response code
+         *                       will be stored
+		 * @return Indicates success or failure reason
+		 */ 
+		int coap_put(char *send_data, char *recv_data, int data_indentifier, int &response_code);
+
+		/** Perform a PUT request using CoAP and save the returned 
+		 *  data into recv_data
+		 * 
+		 * @param *send_data Pointer to a byte array containing the 
+		 *                   data to be sent to the server
+		 * @param *recv_data Pointer to a byte array where the data 
+		 *                   returned from the server will be stored
+		 * @param data_intenfier Integer value representing the data 
+		 *                       format type. Possible values are enumerated
+		 *                       in the header file, i.e. TEXT_PLAIN
+         * @param &response_code Address of integer where CoAP operation response code
+         *                       will be stored
+		 * @return Indicates success or failure reason
+		 */ 
+		int coap_post(char *send_data, char *recv_data, int data_indentifier, int &response_code);
 
 		/** Reboots the module. After receiving the 'REBOOTING' response, no further
 		 *  AT commands will be processed until the module has successfully power on
@@ -273,12 +384,32 @@ class SaraN2
 		 */ 
 		int configure_ue(uint8_t function, uint8_t value);
 
+        /** Determine whether +CEREG URC is enabled and the current
+         *  network registration status of the device
+         *
+         * @param &urc Address of integer in which to store URC value
+         * @param &connected Address of integer in which to store network
+         *                   registration status value
+         * @return Indicates success or failure reason
+         */
+        int cereg(int &urc, int &status);
+
+        /** Determine whether +CSCON URC is enabled and the current
+         *  radio connection status of the device
+         *
+         * @param &urc Address of integer in which to store URC value
+         * @param &connected Address of integer in which to store connected value
+         * @return Indicates success or failure reason
+         */
+        int cscon(int &urc, int &connected);
+
 		/** Return operation stats, of a given type, of the module
-		 * 
-		 * @param type Enumerated type of the AT+NUESTATS types to query
-		 * @return Indicates success or failure reason
-		 */
-		int nuestats(uint8_t type);
+         * 
+         * @param *data Point to .data parameter of Nuestats_t struct
+         *              to copy data into
+         * @return Indicates success or failure reason
+         */
+		int nuestats(char *data);
 
 	private:
 
@@ -296,12 +427,6 @@ class SaraN2
 		 */
 		const char *config_values[2] = { "TRUE", "FALSE" };
 
-		/** Potential AT+NUESTATS type arguments, to be access using the enumerated
-		 *  type that corresponds to the index of the type you wish to use, i.e:
-		 *  nuestats_types[RADIO];
-		 */
-		const char *nuestats_types[5] = { "RADIO", "CELL", "BLER", "APPSMEM", "THP" };
-
 		DigitalIn  _cts;
 		DigitalOut _rst;
 		DigitalIn  _vint;
@@ -309,5 +434,6 @@ class SaraN2
 
 		UARTSerial  *_serial;
         ATCmdParser *_parser;
+		Mutex _smutex;
 };
 
