@@ -104,7 +104,7 @@ class SaraN2
 
 		/** Enumerated list of AT+NCONFIG functions
 		 */
-		enum
+		enum : uint8_t
 		{
 			AUTOCONNECT        = 0,
 			SCRAMBLING         = 1,
@@ -117,7 +117,7 @@ class SaraN2
 		
 		/** Enumerated list of AT+NCONFIG values
 		 */
-		enum
+		enum : uint8_t
 		{
 			TRUE  = 0,
 			FALSE = 1
@@ -413,7 +413,7 @@ class SaraN2
 
 	private:
 
-		/** Potential AT+CONFIG function arguments, to be accessed using the enumerated
+        /** Potential AT+CONFIG function arguments, to be accessed using the enumerated
 		 *  value that corresponds to the index of the function you wish to use, i.e:
 		 *  config_functions[AUTOCONNECT];
 		 */
