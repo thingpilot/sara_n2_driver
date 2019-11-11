@@ -694,7 +694,7 @@ int SaraN2::reboot_module()
     }
 }
 
-/** Enable modulde Power Save Mode (PSM)
+/** Enable module Power Save Mode (PSM)
  * 
  * @return Indicates success or failure reason
  */
@@ -716,7 +716,7 @@ int SaraN2::enable_power_save_mode()
 	return SaraN2::SARAN2_OK;
 }
 
-/** Disable modulde Power Save Mode (PSM)
+/** Disable module Power Save Mode (PSM)
  * 
  * @return Indicates success or failure reason
  */
@@ -731,6 +731,32 @@ int SaraN2::disable_power_save_mode()
 	{
 		_smutex.unlock();
 		return SaraN2::FAIL_DISABLE_PSM;
+	}
+
+	_smutex.unlock();
+
+	return SaraN2::SARAN2_OK;
+}
+
+/** Query whether or not Power Save Mode (PSM) is enabled
+ *  
+ * @param &power_save_mode Address of integer in which to store
+ *                         value of power save mode setting. 1 
+ *                         means that PSM is enabled, 0 means 
+ *                         that PSM is disable
+ * @return Indicates success or failure reason
+ */
+int SaraN2::query_power_save_mode(int &power_save_mode)
+{
+	_smutex.lock();
+
+	_parser->flush();
+
+	_parser->send("AT+CPSMS?");
+	if(!_parser->recv("+CPSMS: %d", &power_save_mode) || !_parser->recv("OK"))
+	{
+		_smutex.unlock();
+		return SaraN2::FAIL_QUERY_PSM;
 	}
 
 	_smutex.unlock();
