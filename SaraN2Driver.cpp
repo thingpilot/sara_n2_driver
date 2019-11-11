@@ -439,19 +439,24 @@ int SaraN2::select_coap_at_interface()
  * 
  * @param *recv_data Pointer to a byte array where the data
  *                   returned from the server will be stored
+ * @param &response_code Address of integer where CoAP operation response code
+ *                       will be stored
+ * @param &more_block Address of integer where data more_block response
+ *                    will be stored
  * @param timeout_ms Timeout value for the parser in milliseconds
  * @return Indicates success or failure reason
  */
-int SaraN2::parse_coap_response(char *recv_data, uint16_t timeout)
+int SaraN2::parse_coap_response(char *recv_data, int &response_code, int &more_block, uint16_t timeout)
 {
 	_parser->set_timeout(timeout);
-
-	int response_code = -1;
-	int more_block = -1;
 
     if(_parser->recv("+UCOAPCD: %d", &response_code))
     {
         _parser->set_timeout(100);
+
+        uint16_t buffer_index = 0;
+        int capture_byte = -1;
+        int more_block_byte = -1;
 
         /* Max recv_data payload size is 512 bytes so allow for more_block and a 
          * a few bytes to spare 
@@ -465,7 +470,36 @@ int SaraN2::parse_coap_response(char *recv_data, uint16_t timeout)
                 break;
             }
 
-            memcpy(&recv_data[i], &byte, 1);
+            if(byte == 34) // ASCII for "
+            {
+                // Start of payload
+                if(capture_byte == -1)
+                {
+                    capture_byte = i + 1;
+                    buffer_index = 0;
+                    continue;
+                }
+                // End of payload
+                else
+                {
+                    more_block_byte = i + 2;
+                    capture_byte = -2;
+                    continue;
+                }
+            }
+
+            if(capture_byte == i)
+            {
+                memcpy(&recv_data[buffer_index], &byte, 1);
+                buffer_index++;
+                capture_byte++;
+            }
+
+            if(more_block_byte == i)
+            {
+                more_block = byte;
+                break;
+            }
         }
 
         _parser->set_timeout(500);
@@ -483,9 +517,11 @@ int SaraN2::parse_coap_response(char *recv_data, uint16_t timeout)
  * 
  * @param *recv_data Pointer to a byte array where the data 
  *                   returned from the server will be stored
+ * @param &response_code Address of integer where CoAP operation response code
+ *                       will be stored
  * @return Indicates success or failure reason
  */ 
-int SaraN2::coap_get(char *recv_data)
+int SaraN2::coap_get(char *recv_data, int &response_code)
 {
 	_smutex.lock();
 
@@ -498,7 +534,8 @@ int SaraN2::coap_get(char *recv_data)
 		return SaraN2::FAIL_START_GET_REQUEST;
 	}
 
-	if(parse_coap_response(recv_data) != SaraN2::SARAN2_OK)
+    int more_block = -1;
+	if(parse_coap_response(recv_data, response_code, more_block) != SaraN2::SARAN2_OK)
 	{
 		_smutex.unlock();
 		return SaraN2::FAIL_PARSE_RESPONSE;
@@ -514,9 +551,11 @@ int SaraN2::coap_get(char *recv_data)
  * 
  * @param *recv_data Pointer to a byte array where the data 
  *                   returned from the server will be stored
+ * @param &response_code Address of integer where CoAP operation response code
+ *                       will be stored
  * @return Indicates success or failure reason
  */ 
-int SaraN2::coap_delete(char *recv_data)
+int SaraN2::coap_delete(char *recv_data, int &response_code)
 {
 	_smutex.lock();
 
@@ -529,7 +568,8 @@ int SaraN2::coap_delete(char *recv_data)
 		return SaraN2::FAIL_START_DELETE_REQUEST;
 	}
 
-	if(parse_coap_response(recv_data) != SaraN2::SARAN2_OK)
+    int more_block = -1;
+	if(parse_coap_response(recv_data, response_code, more_block) != SaraN2::SARAN2_OK)
 	{
 		_smutex.unlock();
 		return SaraN2::FAIL_PARSE_RESPONSE;
@@ -550,9 +590,11 @@ int SaraN2::coap_delete(char *recv_data)
  * @param data_intenfier Integer value representing the data 
  *                       format type. Possible values are enumerated
  *                       in the header file, i.e. TEXT_PLAIN
+ * @param &response_code Address of integer where CoAP operation response code
+ *                       will be stored
  * @return Indicates success or failure reason
  */ 
-int SaraN2::coap_put(char *send_data, char *recv_data, int data_indentifier)
+int SaraN2::coap_put(char *send_data, char *recv_data, int data_indentifier, int &response_code)
 {
 	_smutex.lock();
 
@@ -565,7 +607,8 @@ int SaraN2::coap_put(char *send_data, char *recv_data, int data_indentifier)
 		return SaraN2::FAIL_START_PUT_REQUEST;
 	}
 
-	if(parse_coap_response(recv_data) != SaraN2::SARAN2_OK)
+    int more_block = -1;
+	if(parse_coap_response(recv_data, response_code, more_block) != SaraN2::SARAN2_OK)
 	{
 		_smutex.unlock();
 		return SaraN2::FAIL_PARSE_RESPONSE;
@@ -586,9 +629,11 @@ int SaraN2::coap_put(char *send_data, char *recv_data, int data_indentifier)
  * @param data_intenfier Integer value representing the data 
  *                       format type. Possible values are enumerated
  *                       in the header file, i.e. TEXT_PLAIN
+ * @param &response_code Address of integer where CoAP operation response code
+ *                       will be stored
  * @return Indicates success or failure reason
  */ 
-int SaraN2::coap_post(char *send_data, char *recv_data, int data_indentifier)
+int SaraN2::coap_post(char *send_data, char *recv_data, int data_indentifier, int &response_code)
 {
 	_smutex.lock();
 
@@ -601,7 +646,8 @@ int SaraN2::coap_post(char *send_data, char *recv_data, int data_indentifier)
 		return SaraN2::FAIL_START_POST_REQUEST;
 	}
 
-	if(parse_coap_response(recv_data) != SaraN2::SARAN2_OK)
+    int more_block = -1;
+	if(parse_coap_response(recv_data, response_code, more_block) != SaraN2::SARAN2_OK)
 	{
 		_smutex.unlock();
 		return SaraN2::FAIL_PARSE_RESPONSE;

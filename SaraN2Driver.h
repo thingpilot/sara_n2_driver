@@ -292,31 +292,39 @@ class SaraN2
 		int select_coap_at_interface();
 
 		/** Parse response from CoAP server into recv_data
-		 * 
-		 * @param *recv_data Pointer to a byte array where the data
-		 *                   returned from the server will be stored
-		 * @param timeout_ms Timeout value for the parser in milliseconds
-		 * @return Indicates success or failure reason
-		 */
-		int parse_coap_response(char *recv_data, uint16_t timeout_ms = 10000);
+         * 
+         * @param *recv_data Pointer to a byte array where the data
+         *                   returned from the server will be stored
+         * @param &response_code Address of integer where CoAP operation response code
+         *                       will be stored
+         * @param &more_block Address of integer where data more_block response
+         *                    will be stored
+         * @param timeout_ms Timeout value for the parser in milliseconds
+         * @return Indicates success or failure reason
+         */
+		int parse_coap_response(char *recv_data, int &response_code, int &more_block, uint16_t timeout_ms = 10000);
 
 		/** Perform a GET request using CoAP and save the returned 
 		 *  data into recv_data
 		 * 
 		 * @param *recv_data Pointer to a byte array where the data 
 		 *                   returned from the server will be stored
+         * @param &response_code Address of integer where CoAP operation response code
+         *                       will be stored
 		 * @return Indicates success or failure reason
 		 */ 
-		int coap_get(char *recv_data);
+		int coap_get(char *recv_data, int &response_code);
 
 		/** Perform a DELETE request using CoAP and save the returned 
 		 *  data into recv_data
 		 * 
 		 * @param *recv_data Pointer to a byte array where the data 
 		 *                   returned from the server will be stored
+         * @param &response_code Address of integer where CoAP operation response code
+         *                       will be stored
 		 * @return Indicates success or failure reason
 		 */ 
-		int coap_delete(char *recv_data);
+		int coap_delete(char *recv_data, int &response_code);
 
 		/** Perform a PUT request using CoAP and save the returned 
 		 *  data into recv_data
@@ -328,9 +336,11 @@ class SaraN2
 		 * @param data_intenfier Integer value representing the data 
 		 *                       format type. Possible values are enumerated
 		 *                       in the header file, i.e. TEXT_PLAIN
+         * @param &response_code Address of integer where CoAP operation response code
+         *                       will be stored
 		 * @return Indicates success or failure reason
 		 */ 
-		int coap_put(char *send_data, char *recv_data, int data_indentifier);
+		int coap_put(char *send_data, char *recv_data, int data_indentifier, int &response_code);
 
 		/** Perform a PUT request using CoAP and save the returned 
 		 *  data into recv_data
@@ -342,9 +352,11 @@ class SaraN2
 		 * @param data_intenfier Integer value representing the data 
 		 *                       format type. Possible values are enumerated
 		 *                       in the header file, i.e. TEXT_PLAIN
+         * @param &response_code Address of integer where CoAP operation response code
+         *                       will be stored
 		 * @return Indicates success or failure reason
 		 */ 
-		int coap_post(char *send_data, char *recv_data, int data_indentifier);
+		int coap_post(char *send_data, char *recv_data, int data_indentifier, int &response_code);
 
 		/** Reboots the module. After receiving the 'REBOOTING' response, no further
 		 *  AT commands will be processed until the module has successfully power on
