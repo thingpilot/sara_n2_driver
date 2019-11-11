@@ -400,6 +400,14 @@ class SaraN2
 		 */
 		int query_power_save_mode(int &power_save_mode);
 
+		int SaraN2::set_t3412_timer(char *timer);
+
+		int SaraN2::get_t3412_timer(char *timer);
+
+		int SaraN2::set_t3324_timer(char *timer);
+
+		int SaraN2::get_t3324_timer(char *timer);
+
 		/** Configure customisable aspects of the UE given the functions and values
 		 *  available in the enumerated list of AT+NCONFIG functions and values
 		 * 

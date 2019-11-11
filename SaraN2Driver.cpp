@@ -764,6 +764,34 @@ int SaraN2::query_power_save_mode(int &power_save_mode)
 	return SaraN2::SARAN2_OK;
 }
 
+
+// AT+CPSMS=PSM,,,"T3412","T3324"
+int SaraN2::set_t3412_timer(char *timer)
+{
+	// get psm value
+	// get t3324 value
+	// set t3412
+}
+
+int SaraN2::get_t3412_timer(char *timer)
+{
+
+}
+
+
+int SaraN2::set_t3324_timer(char *timer)
+{	
+	// get psm value
+	// get tt3412 value
+	// set t3324
+}
+
+int SaraN2::get_t3324_timer(char *timer)
+{
+
+}
+
+
 /** Configure customisable aspects of the UE given the functions and values
  *  available in the enumerated list of AT+NCONFIG functions and values
  * 
