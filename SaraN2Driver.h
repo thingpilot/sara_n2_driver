@@ -60,6 +60,16 @@ class SaraN2
             FAIL_GET_CEREG                = 28          
 		};
 
+        /** CoAP response codes 
+         */
+        enum
+        {
+            EMPTY_MESSAGE = 0,
+            SUCCESS       = 2,
+            CLIENT_ERROR  = 4,
+            SERVER_ERROR  = 5
+        };
+
 		/** List of available CoAP profiles
 		 */ 
 		enum
