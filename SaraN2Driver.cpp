@@ -1128,3 +1128,41 @@ int SaraN2::gprs_detach()
 
     return SaraN2::SARAN2_OK;
 }
+
+
+int SaraN2::auto_register_to_network()
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+COPS=0");
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_TRIGGER_NETWORK_REGISTER;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::deregister_from_network()
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+COPS=2");
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_TRIGGER_NETWORK_DEREGISTER;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}

@@ -29,46 +29,48 @@ class SaraN2
 		 */
 		enum
 		{
-			SARAN2_OK 				  	  = 0,
-			FAIL_AT             	  	  = 1,
-			FAIL_SELECT_PROFILE       	  = 2,
-			INVALID_PROFILE           	  = 3,
-			FAIL_LOAD_PROFILE         	  = 4,
-			FAIL_SAVE_PROFILE         	  = 5,
-			FAIL_SET_PROFILE_VALIDITY 	  = 6,
-			VALUE_OUT_OF_BOUNDS       	  = 7,
-			FAIL_SET_COAP_IP_PORT     	  = 8,
-			FAIL_SET_COAP_URI         	  = 9,
-			URI_TOO_LONG              	  = 10,
-			FAIL_ADD_URI_HOST_PDU     	  = 11,
-			FAIL_ADD_URI_PORT_PDU     	  = 12,
-			FAIL_ADD_URI_PATH_PDU     	  = 13,
-			FAIL_ADD_URI_QUERY_PDU    	  = 14,
-			FAIL_REMOVE_URI_HOST_PDU  	  = 15,
-			FAIL_REMOVE_URI_PORT_PDU  	  = 16,
-			FAIL_REMOVE_URI_PATH_PDU      = 17,
-			FAIL_REMOVE_URI_QUERY_PDU     = 18,
-			FAIL_SELECT_COAP_AT_INTERFACE = 19,
-			FAIL_REBOOT                   = 20,
-			FAIL_CONFIGURE_UE             = 21,
-			FAIL_START_GET_REQUEST        = 22,
-			FAIL_START_DELETE_REQUEST     = 23,
-			FAIL_START_PUT_REQUEST        = 24,
-			FAIL_START_POST_REQUEST       = 25,
-			FAIL_PARSE_RESPONSE           = 26,
-            FAIL_GET_CSCON                = 27,
-            FAIL_GET_CEREG                = 28,
-			FAIL_ENABLE_PSM               = 29,
-			FAIL_DISABLE_PSM              = 30,
-			FAIL_QUERY_PSM                = 31,
-            FAIL_GET_T3412                = 32,
-            FAIL_GET_T3324                = 33,
-            FAIL_SET_T3412                = 34,
-            FAIL_SET_T3324                = 35,
-            FAIL_DEACTIVATE_RADIO         = 36,
-            FAIL_ACTIVATE_RADIO           = 37,
-            FAIL_TRIGGER_GPRS_ATTACH      = 38,
-            FAIL_TRIGGER_GPRS_DETACH      = 39
+			SARAN2_OK 				  	    = 0,
+			FAIL_AT             	  	    = 1,
+			FAIL_SELECT_PROFILE       	    = 2,
+			INVALID_PROFILE           	    = 3,
+			FAIL_LOAD_PROFILE         	    = 4,
+			FAIL_SAVE_PROFILE         	    = 5,
+			FAIL_SET_PROFILE_VALIDITY 	    = 6,
+			VALUE_OUT_OF_BOUNDS       	    = 7,
+			FAIL_SET_COAP_IP_PORT     	    = 8,
+			FAIL_SET_COAP_URI         	    = 9,
+			URI_TOO_LONG              	    = 10,
+			FAIL_ADD_URI_HOST_PDU     	    = 11,
+			FAIL_ADD_URI_PORT_PDU     	    = 12,
+			FAIL_ADD_URI_PATH_PDU     	    = 13,
+			FAIL_ADD_URI_QUERY_PDU    	    = 14,
+			FAIL_REMOVE_URI_HOST_PDU  	    = 15,
+			FAIL_REMOVE_URI_PORT_PDU  	    = 16,
+			FAIL_REMOVE_URI_PATH_PDU        = 17,
+			FAIL_REMOVE_URI_QUERY_PDU       = 18,
+			FAIL_SELECT_COAP_AT_INTERFACE   = 19,
+			FAIL_REBOOT                     = 20,
+			FAIL_CONFIGURE_UE               = 21,
+			FAIL_START_GET_REQUEST          = 22,
+			FAIL_START_DELETE_REQUEST       = 23,
+			FAIL_START_PUT_REQUEST          = 24,
+			FAIL_START_POST_REQUEST         = 25,
+			FAIL_PARSE_RESPONSE             = 26,
+            FAIL_GET_CSCON                  = 27,
+            FAIL_GET_CEREG                  = 28,
+			FAIL_ENABLE_PSM                 = 29,
+			FAIL_DISABLE_PSM                = 30,
+			FAIL_QUERY_PSM                  = 31,
+            FAIL_GET_T3412                  = 32,
+            FAIL_GET_T3324                  = 33,
+            FAIL_SET_T3412                  = 34,
+            FAIL_SET_T3324                  = 35,
+            FAIL_DEACTIVATE_RADIO           = 36,
+            FAIL_ACTIVATE_RADIO             = 37,
+            FAIL_TRIGGER_GPRS_ATTACH        = 38,
+            FAIL_TRIGGER_GPRS_DETACH        = 39,
+            FAIL_TRIGGER_NETWORK_REGISTER   = 40,
+            FAIL_TRIGGER_NETWORK_DEREGISTER = 41
 		};
 
         /** CoAP response codes 
@@ -489,6 +491,11 @@ class SaraN2
         int gprs_attach();
 
         int gprs_detach();
+
+        int auto_register_to_network();
+
+        int deregister_from_network();
+
 
 	private:
 
