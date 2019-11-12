@@ -764,7 +764,14 @@ int SaraN2::query_power_save_mode(int &power_save_mode)
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Set the T3412 timer. The AT command requires that the PSM and
+ *  T3324 settings are specified also, so the current values for 
+ *  these settings are determined and reused
+ * 
+ * @param *timer Char array containing 8-bit binary string conforming
+ *               to 3GPP TS 24.008 GPRS Timer 3 definition
+ * @return Indicates success or failure reason
+ */
 int SaraN2::set_t3412_timer(char *timer)
 {
     int psm;
@@ -798,7 +805,13 @@ int SaraN2::set_t3412_timer(char *timer)
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Retrive the T3412 timer setting. 
+ * 
+ * @param *timer Pointer to Char array in which to store the binary string
+ *               that represents the timer setting. The Char array must be 
+ *               AT LEAST 9 bytes in length
+ * @return Indicates success or failure reason
+ */
 int SaraN2::get_t3412_timer(char *timer)
 {
     int psm;
@@ -823,7 +836,14 @@ int SaraN2::get_t3412_timer(char *timer)
     return SaraN2::FAIL_GET_T3412;
 }
 
-
+/** Set the T3324 timer. The AT command requires that the PSM and
+ *  T3412 settings are specified also, so the current values for 
+ *  these settings are determined and reused
+ * 
+ * @param *timer Char array containing 8-bit binary string conforming
+ *               to 3GPP TS 24.008 GPRS Timer 2 definition
+ * @return Indicates success or failure reason
+ */
 int SaraN2::set_t3324_timer(char *timer)
 {	
     int psm;
@@ -857,7 +877,13 @@ int SaraN2::set_t3324_timer(char *timer)
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Retrive the T3324 timer setting. 
+ * 
+ * @param *timer Pointer to Char array in which to store the binary string
+ *               that represents the timer setting. The Char array must be 
+ *               AT LEAST 9 bytes in length
+ * @return Indicates success or failure reason
+ */
 int SaraN2::get_t3324_timer(char *timer)
 {
     int psm;
