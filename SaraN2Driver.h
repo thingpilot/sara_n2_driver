@@ -502,7 +502,7 @@ class SaraN2
 		 */
         int gprs_attach();
 
-		/** Attempt to oetach from network GPRS service
+		/** Attempt to detach from network GPRS service
 		 *
 		 * @return Indicates success or failure reason
 		 */
