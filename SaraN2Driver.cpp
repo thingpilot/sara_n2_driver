@@ -764,14 +764,36 @@ int SaraN2::query_power_save_mode(int &power_save_mode)
 	return SaraN2::SARAN2_OK;
 }
 
-// +CPSMS: 1,,,"01000001","00000101"
 
-// AT+CPSMS=PSM,,,"T3412","T3324"
 int SaraN2::set_t3412_timer(char *timer)
 {
-	// get psm value
-	// get t3324 value
-	// set t3412
+    int psm;
+    char t3324[10];
+
+    int status = query_power_save_mode(psm);
+    if(status != SaraN2::SARAN2_OK)
+    {
+        return status;
+    }
+
+    status = get_t3324_timer(t3324);
+    if(status != SaraN2::SARAN2_OK)
+    {
+        return status;
+    }
+
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CPSMS=%d,,,\"%s\",\"%s\"", psm, timer, t3324);
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_SET_T3412;
+    }
+	
+    _smutex.unlock();
 
 	return SaraN2::SARAN2_OK;
 }
@@ -792,6 +814,7 @@ int SaraN2::get_t3412_timer(char *timer)
     {
         _smutex.unlock();
         memcpy(&timer[8], &"\0", 1);
+
         return SaraN2::SARAN2_OK;
     }
 
@@ -803,15 +826,41 @@ int SaraN2::get_t3412_timer(char *timer)
 
 int SaraN2::set_t3324_timer(char *timer)
 {	
-	// get psm value
-	// get tt3412 value
-	// set t3324
+    int psm;
+    char t3412[10];
+
+    int status = query_power_save_mode(psm);
+    if(status != SaraN2::SARAN2_OK)
+    {
+        return status;
+    }
+
+    status = get_t3412_timer(t3412);
+    if(status != SaraN2::SARAN2_OK)
+    {
+        return status;
+    }
+
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CPSMS=%d,,,\"%s\",\"%s\"", psm, t3412, timer);
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_SET_T3324;
+    }
+	
+    _smutex.unlock();
+
 	return SaraN2::SARAN2_OK;
 }
 
+
 int SaraN2::get_t3324_timer(char *timer)
 {
-	int psm;
+    int psm;
     char t3412[10];
 
     _smutex.lock();
@@ -824,6 +873,7 @@ int SaraN2::get_t3324_timer(char *timer)
     {
         _smutex.unlock();
         memcpy(&timer[8], &"\0", 1);
+
         return SaraN2::SARAN2_OK;
     }
 
@@ -831,7 +881,6 @@ int SaraN2::get_t3324_timer(char *timer)
 
     return SaraN2::FAIL_GET_T3324;
 }
-
 
 /** Configure customisable aspects of the UE given the functions and values
  *  available in the enumerated list of AT+NCONFIG functions and values
