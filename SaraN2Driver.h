@@ -64,7 +64,11 @@ class SaraN2
             FAIL_GET_T3412                = 32,
             FAIL_GET_T3324                = 33,
             FAIL_SET_T3412                = 34,
-            FAIL_SET_T3324                = 35
+            FAIL_SET_T3324                = 35,
+            FAIL_DEACTIVATE_RADIO         = 36,
+            FAIL_ACTIVATE_RADIO           = 37,
+            FAIL_TRIGGER_GPRS_ATTACH      = 38,
+            FAIL_TRIGGER_GPRS_DETACH      = 39
 		};
 
         /** CoAP response codes 
@@ -477,6 +481,14 @@ class SaraN2
          * @return Indicates success or failure reason
          */
 		int nuestats(char *data);
+
+        int deactivate_radio();
+
+        int activate_radio();
+
+        int gprs_attach();
+
+        int gprs_detach();
 
 	private:
 

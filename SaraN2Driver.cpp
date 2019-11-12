@@ -1052,3 +1052,79 @@ int SaraN2::nuestats(char *data)
 
 	return SaraN2::SARAN2_OK;
 }
+
+
+int SaraN2::deactivate_radio()
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CFUN=0");
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_DEACTIVATE_RADIO;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::activate_radio()
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CFUN=1");
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_ACTIVATE_RADIO;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::gprs_attach()
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CGATT=1");
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_TRIGGER_GPRS_ATTACH;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
+
+
+int SaraN2::gprs_detach()
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CGATT=0");
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_TRIGGER_GPRS_DETACH;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
