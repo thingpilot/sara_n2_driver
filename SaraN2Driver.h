@@ -60,7 +60,11 @@ class SaraN2
             FAIL_GET_CEREG                = 28,
 			FAIL_ENABLE_PSM               = 29,
 			FAIL_DISABLE_PSM              = 30,
-			FAIL_QUERY_PSM                = 31          
+			FAIL_QUERY_PSM                = 31,
+            FAIL_GET_T3412                = 32,
+            FAIL_GET_T3324                = 33,
+            FAIL_SET_T3412                = 34,
+            FAIL_SET_T3324                = 35
 		};
 
         /** CoAP response codes 

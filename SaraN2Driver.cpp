@@ -764,6 +764,7 @@ int SaraN2::query_power_save_mode(int &power_save_mode)
 	return SaraN2::SARAN2_OK;
 }
 
+// +CPSMS: 1,,,"01000001","00000101"
 
 // AT+CPSMS=PSM,,,"T3412","T3324"
 int SaraN2::set_t3412_timer(char *timer)
@@ -775,9 +776,28 @@ int SaraN2::set_t3412_timer(char *timer)
 	return SaraN2::SARAN2_OK;
 }
 
+
 int SaraN2::get_t3412_timer(char *timer)
 {
-	return SaraN2::SARAN2_OK;
+    int psm;
+    char t3324[10];
+
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CPSMS?");
+    if(_parser->recv("+CPSMS: %d,,,\"%8s\", \"%8s\"", &psm, timer, t3324) &&
+       _parser->recv("OK"))
+    {
+        _smutex.unlock();
+        memcpy(&timer[8], &"\0", 1);
+        return SaraN2::SARAN2_OK;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::FAIL_GET_T3412;
 }
 
 
@@ -791,7 +811,25 @@ int SaraN2::set_t3324_timer(char *timer)
 
 int SaraN2::get_t3324_timer(char *timer)
 {
-	return SaraN2::SARAN2_OK;
+	int psm;
+    char t3412[10];
+
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CPSMS?");
+    if(_parser->recv("+CPSMS: %d,,,\"%8s\",\"%8s\"", &psm, t3412, timer) &&
+       _parser->recv("OK"))
+    {
+        _smutex.unlock();
+        memcpy(&timer[8], &"\0", 1);
+        return SaraN2::SARAN2_OK;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::FAIL_GET_T3324;
 }
 
 
