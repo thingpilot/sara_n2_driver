@@ -1053,7 +1053,10 @@ int SaraN2::nuestats(char *data)
 	return SaraN2::SARAN2_OK;
 }
 
-
+/** Disable TX and RX RF circuits
+ * 
+ * @return Indicates success or failure reason
+ */
 int SaraN2::deactivate_radio()
 {
     _smutex.lock();
@@ -1072,7 +1075,10 @@ int SaraN2::deactivate_radio()
     return SaraN2::SARAN2_OK;
 }
 
-
+/** Enable TX and RX RF circuits
+ * 
+ * @return Indicates success or failure reason
+ */
 int SaraN2::activate_radio()
 {
     _smutex.lock();
@@ -1091,7 +1097,10 @@ int SaraN2::activate_radio()
     return SaraN2::SARAN2_OK;
 }
 
-
+/** Attempt to attach to network GPRS service
+ *
+ * @return Indicates success or failure reason
+ */
 int SaraN2::gprs_attach()
 {
     _smutex.lock();
@@ -1110,7 +1119,10 @@ int SaraN2::gprs_attach()
     return SaraN2::SARAN2_OK;
 }
 
-
+/** Attempt to detach from network GPRS service
+ *
+ * @return Indicates success or failure reason
+ */
 int SaraN2::gprs_detach()
 {
     _smutex.lock();
@@ -1129,7 +1141,11 @@ int SaraN2::gprs_detach()
     return SaraN2::SARAN2_OK;
 }
 
-
+/** Attempt to automatically register to network
+ *  using SIM card home PLMN
+ *
+ * @return Indicates success or failure reason
+ */
 int SaraN2::auto_register_to_network()
 {
     _smutex.lock();
@@ -1148,7 +1164,10 @@ int SaraN2::auto_register_to_network()
     return SaraN2::SARAN2_OK;
 }
 
-
+/** Deregister from network
+ * 
+ * @return Indicates success or failure reason
+ */
 int SaraN2::deregister_from_network()
 {
     _smutex.lock();
