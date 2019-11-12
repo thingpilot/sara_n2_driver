@@ -1052,3 +1052,136 @@ int SaraN2::nuestats(char *data)
 
 	return SaraN2::SARAN2_OK;
 }
+
+/** Disable TX and RX RF circuits
+ * 
+ * @return Indicates success or failure reason
+ */
+int SaraN2::deactivate_radio()
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CFUN=0");
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_DEACTIVATE_RADIO;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
+
+/** Enable TX and RX RF circuits
+ * 
+ * @return Indicates success or failure reason
+ */
+int SaraN2::activate_radio()
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CFUN=1");
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_ACTIVATE_RADIO;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
+
+/** Attempt to attach to network GPRS service
+ *
+ * @return Indicates success or failure reason
+ */
+int SaraN2::gprs_attach()
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CGATT=1");
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_TRIGGER_GPRS_ATTACH;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
+
+/** Attempt to detach from network GPRS service
+ *
+ * @return Indicates success or failure reason
+ */
+int SaraN2::gprs_detach()
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CGATT=0");
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_TRIGGER_GPRS_DETACH;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
+
+/** Attempt to automatically register to network
+ *  using SIM card home PLMN
+ *
+ * @return Indicates success or failure reason
+ */
+int SaraN2::auto_register_to_network()
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+COPS=0");
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_TRIGGER_NETWORK_REGISTER;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
+
+/** Deregister from network
+ * 
+ * @return Indicates success or failure reason
+ */
+int SaraN2::deregister_from_network()
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+COPS=2");
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_TRIGGER_NETWORK_DEREGISTER;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
