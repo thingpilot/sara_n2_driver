@@ -60,7 +60,11 @@ class SaraN2
             FAIL_GET_CEREG                = 28,
 			FAIL_ENABLE_PSM               = 29,
 			FAIL_DISABLE_PSM              = 30,
-			FAIL_QUERY_PSM                = 31          
+			FAIL_QUERY_PSM                = 31,
+            FAIL_GET_T3412                = 32,
+            FAIL_GET_T3324                = 33,
+            FAIL_SET_T3412                = 34,
+            FAIL_SET_T3324                = 35
 		};
 
         /** CoAP response codes 
@@ -399,6 +403,44 @@ class SaraN2
 		 * @return Indicates success or failure reason
 		 */
 		int query_power_save_mode(int &power_save_mode);
+
+		/** Set the T3412 timer. The AT command requires that the PSM and
+		 *  T3324 settings are specified also, so the current values for 
+		 *  these settings are determined and reused
+		 * 
+		 * @param *timer Char array containing 8-bit binary string conforming
+		 *               to 3GPP TS 24.008 GPRS Timer 3 definition
+		 * @return Indicates success or failure reason
+		 */
+		int set_t3412_timer(char *timer);
+
+		/** Retrive the T3412 timer setting. 
+		 * 
+		 * @param *timer Pointer to Char array in which to store the binary string
+		 *               that represents the timer setting. The Char array must be 
+		 *               AT LEAST 9 bytes in length
+		 * @return Indicates success or failure reason
+		 */
+		int get_t3412_timer(char *timer);
+
+		/** Set the T3324 timer. The AT command requires that the PSM and
+		 *  T3412 settings are specified also, so the current values for 
+		 *  these settings are determined and reused
+		 * 
+		 * @param *timer Char array containing 8-bit binary string conforming
+		 *               to 3GPP TS 24.008 GPRS Timer 2 definition
+		 * @return Indicates success or failure reason
+		 */
+		int set_t3324_timer(char *timer);
+
+		/** Retrive the T3324 timer setting. 
+		 * 
+		 * @param *timer Pointer to Char array in which to store the binary string
+		 *               that represents the timer setting. The Char array must be 
+		 *               AT LEAST 9 bytes in length
+		 * @return Indicates success or failure reason
+		 */
+		int get_t3324_timer(char *timer);
 
 		/** Configure customisable aspects of the UE given the functions and values
 		 *  available in the enumerated list of AT+NCONFIG functions and values

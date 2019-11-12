@@ -764,6 +764,150 @@ int SaraN2::query_power_save_mode(int &power_save_mode)
 	return SaraN2::SARAN2_OK;
 }
 
+/** Set the T3412 timer. The AT command requires that the PSM and
+ *  T3324 settings are specified also, so the current values for 
+ *  these settings are determined and reused
+ * 
+ * @param *timer Char array containing 8-bit binary string conforming
+ *               to 3GPP TS 24.008 GPRS Timer 3 definition
+ * @return Indicates success or failure reason
+ */
+int SaraN2::set_t3412_timer(char *timer)
+{
+    int psm;
+    char t3324[10];
+
+    int status = query_power_save_mode(psm);
+    if(status != SaraN2::SARAN2_OK)
+    {
+        return status;
+    }
+
+    status = get_t3324_timer(t3324);
+    if(status != SaraN2::SARAN2_OK)
+    {
+        return status;
+    }
+
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CPSMS=%d,,,\"%s\",\"%s\"", psm, timer, t3324);
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_SET_T3412;
+    }
+	
+    _smutex.unlock();
+
+	return SaraN2::SARAN2_OK;
+}
+
+/** Retrive the T3412 timer setting. 
+ * 
+ * @param *timer Pointer to Char array in which to store the binary string
+ *               that represents the timer setting. The Char array must be 
+ *               AT LEAST 9 bytes in length
+ * @return Indicates success or failure reason
+ */
+int SaraN2::get_t3412_timer(char *timer)
+{
+    int psm;
+    char t3324[10];
+
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CPSMS?");
+    if(_parser->recv("+CPSMS: %d,,,\"%8s\", \"%8s\"", &psm, timer, t3324) &&
+       _parser->recv("OK"))
+    {
+        _smutex.unlock();
+        memcpy(&timer[8], &"\0", 1);
+
+        return SaraN2::SARAN2_OK;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::FAIL_GET_T3412;
+}
+
+/** Set the T3324 timer. The AT command requires that the PSM and
+ *  T3412 settings are specified also, so the current values for 
+ *  these settings are determined and reused
+ * 
+ * @param *timer Char array containing 8-bit binary string conforming
+ *               to 3GPP TS 24.008 GPRS Timer 2 definition
+ * @return Indicates success or failure reason
+ */
+int SaraN2::set_t3324_timer(char *timer)
+{	
+    int psm;
+    char t3412[10];
+
+    int status = query_power_save_mode(psm);
+    if(status != SaraN2::SARAN2_OK)
+    {
+        return status;
+    }
+
+    status = get_t3412_timer(t3412);
+    if(status != SaraN2::SARAN2_OK)
+    {
+        return status;
+    }
+
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CPSMS=%d,,,\"%s\",\"%s\"", psm, t3412, timer);
+    if(!_parser->recv("OK"))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_SET_T3324;
+    }
+	
+    _smutex.unlock();
+
+	return SaraN2::SARAN2_OK;
+}
+
+/** Retrive the T3324 timer setting. 
+ * 
+ * @param *timer Pointer to Char array in which to store the binary string
+ *               that represents the timer setting. The Char array must be 
+ *               AT LEAST 9 bytes in length
+ * @return Indicates success or failure reason
+ */
+int SaraN2::get_t3324_timer(char *timer)
+{
+    int psm;
+    char t3412[10];
+
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CPSMS?");
+    if(_parser->recv("+CPSMS: %d,,,\"%8s\",\"%8s\"", &psm, t3412, timer) &&
+       _parser->recv("OK"))
+    {
+        _smutex.unlock();
+        memcpy(&timer[8], &"\0", 1);
+
+        return SaraN2::SARAN2_OK;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::FAIL_GET_T3324;
+}
+
 /** Configure customisable aspects of the UE given the functions and values
  *  available in the enumerated list of AT+NCONFIG functions and values
  * 
