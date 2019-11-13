@@ -328,7 +328,7 @@ class SaraN2
          * @param timeout_ms Timeout value for the parser in milliseconds
          * @return Indicates success or failure reason
          */
-		int parse_coap_response(char *recv_data, int &response_code, int &more_block, uint16_t timeout_ms = 10000);
+		int parse_coap_response(char *recv_data, int &response_code, int &more_block, uint16_t timeout_ms = 20000);
 
 		/** Perform a GET request using CoAP and save the returned 
 		 *  data into recv_data
