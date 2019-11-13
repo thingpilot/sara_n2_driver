@@ -70,7 +70,8 @@ class SaraN2
             FAIL_TRIGGER_GPRS_ATTACH        = 38,
             FAIL_TRIGGER_GPRS_DETACH        = 39,
             FAIL_TRIGGER_NETWORK_REGISTER   = 40,
-            FAIL_TRIGGER_NETWORK_DEREGISTER = 41
+            FAIL_TRIGGER_NETWORK_DEREGISTER = 41,
+            FAIL_CSQ                        = 42
 		};
 
         /** CoAP response codes 
@@ -204,6 +205,8 @@ class SaraN2
          * @return Indicates success or failure 
          */
 		int at();
+
+        int csq(int &csq);
 
 		/** Select CoAP profile number, between 0-3
          *

@@ -61,6 +61,27 @@ int SaraN2::at()
 	return SaraN2::SARAN2_OK;
 }
 
+
+int SaraN2::csq(int &csq)
+{
+    int unknown = 0;
+    
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CSQ");
+    if(!_parser->recv("+CSQ: %d,%d", &csq, &unknown))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_CSQ;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
+
 /** Select CoAP profile number, between 0-3
  *
  * @param profile Use enumerated values COAP_PROFILE_x to select profile
