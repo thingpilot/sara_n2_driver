@@ -71,7 +71,9 @@ class SaraN2
             FAIL_TRIGGER_GPRS_DETACH        = 39,
             FAIL_TRIGGER_NETWORK_REGISTER   = 40,
             FAIL_TRIGGER_NETWORK_DEREGISTER = 41,
-            FAIL_CSQ                        = 42
+            FAIL_CSQ                        = 42,
+			FAIL_SET_NPSMR_TRUE             = 43,
+			FAIL_GET_NPSMR                  = 44
 		};
 
         /** CoAP response codes 
@@ -215,6 +217,14 @@ class SaraN2
 		 * @return Indicates success or failure reason
 		 */
         int csq(int &power, int &quality);
+
+		/** Retrieve current module PSM status
+		 * 
+		 * @param &psm Address of integer where PSM
+		 *             status will be stored
+		 * @return Indicates success or failure reason
+		 */
+		int npsmr(int &psm);
 
 		/** Select CoAP profile number, between 0-3
          *

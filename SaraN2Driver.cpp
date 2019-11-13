@@ -87,6 +87,39 @@ int SaraN2::csq(int &power, int &quality)
     return SaraN2::SARAN2_OK;
 }
 
+/** Retrieve current module PSM status
+ * 
+ * @param &psm Address of integer where PSM
+ *             status will be stored
+ * @return Indicates success or failure reason
+ */
+int SaraN2::npsmr(int &psm)
+{
+	_smutex.lock();
+
+	_parser->flush();
+
+	_parser->send("AT+NPSMR=1");
+	if(!_parser->recv("OK"))
+	{
+		_smutex.unlock();
+		return SaraN2::FAIL_SET_NPSMR_TRUE;
+	}
+
+	int urc;
+
+	_parser->send("AT+NPSMR?");
+	if(!_parser->recv("+NPSMR: %d,%d", &urc, &psm))
+	{
+		_smutex.unlock();
+		return SaraN2::FAIL_GET_NPSMR;
+	}
+
+	_smutex.unlock();
+
+	return SaraN2::SARAN2_OK;
+}
+
 /** Select CoAP profile number, between 0-3
  *
  * @param profile Use enumerated values COAP_PROFILE_x to select profile
