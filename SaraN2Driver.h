@@ -70,7 +70,10 @@ class SaraN2
             FAIL_TRIGGER_GPRS_ATTACH        = 38,
             FAIL_TRIGGER_GPRS_DETACH        = 39,
             FAIL_TRIGGER_NETWORK_REGISTER   = 40,
-            FAIL_TRIGGER_NETWORK_DEREGISTER = 41
+            FAIL_TRIGGER_NETWORK_DEREGISTER = 41,
+            FAIL_CSQ                        = 42,
+			FAIL_SET_NPSMR_TRUE             = 43,
+			FAIL_GET_NPSMR                  = 44
 		};
 
         /** CoAP response codes 
@@ -205,6 +208,24 @@ class SaraN2
          */
 		int at();
 
+		/** Get last known RSRP and RSRQ
+		 * 
+		 * @param &power Address of integer in which to return
+		 *               last known RSRP
+		 * @param &quality Address of integer in which to return
+		 *                 last known RSRQ
+		 * @return Indicates success or failure reason
+		 */
+        int csq(int &power, int &quality);
+
+		/** Retrieve current module PSM status
+		 * 
+		 * @param &psm Address of integer where PSM
+		 *             status will be stored
+		 * @return Indicates success or failure reason
+		 */
+		int npsmr(int &psm);
+
 		/** Select CoAP profile number, between 0-3
          *
 		 * @param profile Use enumerated values COAP_PROFILE_x to select profile
@@ -325,7 +346,7 @@ class SaraN2
          * @param timeout_ms Timeout value for the parser in milliseconds
          * @return Indicates success or failure reason
          */
-		int parse_coap_response(char *recv_data, int &response_code, int &more_block, uint16_t timeout_ms = 10000);
+		int parse_coap_response(char *recv_data, int &response_code, int &more_block, uint16_t timeout_ms = 20000);
 
 		/** Perform a GET request using CoAP and save the returned 
 		 *  data into recv_data

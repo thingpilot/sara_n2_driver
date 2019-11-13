@@ -61,6 +61,65 @@ int SaraN2::at()
 	return SaraN2::SARAN2_OK;
 }
 
+/** Get last known RSRP and RSRQ
+ * 
+ * @param &power Address of integer in which to return
+ *               last known RSRP
+ * @param &quality Address of integer in which to return
+ *                 last known RSRQ
+ * @return Indicates success or failure reason
+ */
+int SaraN2::csq(int &power, int &quality)
+{
+    _smutex.lock();
+
+    _parser->flush();
+
+    _parser->send("AT+CSQ");
+    if(!_parser->recv("+CSQ: %d,%d", &power, &quality))
+    {
+        _smutex.unlock();
+        return SaraN2::FAIL_CSQ;
+    }
+
+    _smutex.unlock();
+
+    return SaraN2::SARAN2_OK;
+}
+
+/** Retrieve current module PSM status
+ * 
+ * @param &psm Address of integer where PSM
+ *             status will be stored
+ * @return Indicates success or failure reason
+ */
+int SaraN2::npsmr(int &psm)
+{
+	_smutex.lock();
+
+	_parser->flush();
+
+	_parser->send("AT+NPSMR=1");
+	if(!_parser->recv("OK"))
+	{
+		_smutex.unlock();
+		return SaraN2::FAIL_SET_NPSMR_TRUE;
+	}
+
+	int urc;
+
+	_parser->send("AT+NPSMR?");
+	if(!_parser->recv("+NPSMR: %d,%d", &urc, &psm))
+	{
+		_smutex.unlock();
+		return SaraN2::FAIL_GET_NPSMR;
+	}
+
+	_smutex.unlock();
+
+	return SaraN2::SARAN2_OK;
+}
+
 /** Select CoAP profile number, between 0-3
  *
  * @param profile Use enumerated values COAP_PROFILE_x to select profile
