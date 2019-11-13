@@ -61,17 +61,22 @@ int SaraN2::at()
 	return SaraN2::SARAN2_OK;
 }
 
-
-int SaraN2::csq(int &csq)
+/** Get last known RSRP and RSRQ
+ * 
+ * @param &power Address of integer in which to return
+ *               last known RSRP
+ * @param &quality Address of integer in which to return
+ *                 last known RSRQ
+ * @return Indicates success or failure reason
+ */
+int SaraN2::csq(int &power, int &quality)
 {
-    int unknown = 0;
-    
     _smutex.lock();
 
     _parser->flush();
 
     _parser->send("AT+CSQ");
-    if(!_parser->recv("+CSQ: %d,%d", &csq, &unknown))
+    if(!_parser->recv("+CSQ: %d,%d", &power, &quality))
     {
         _smutex.unlock();
         return SaraN2::FAIL_CSQ;

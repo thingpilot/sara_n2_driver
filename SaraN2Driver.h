@@ -206,7 +206,15 @@ class SaraN2
          */
 		int at();
 
-        int csq(int &csq);
+		/** Get last known RSRP and RSRQ
+		 * 
+		 * @param &power Address of integer in which to return
+		 *               last known RSRP
+		 * @param &quality Address of integer in which to return
+		 *                 last known RSRQ
+		 * @return Indicates success or failure reason
+		 */
+        int csq(int &power, int &quality);
 
 		/** Select CoAP profile number, between 0-3
          *
