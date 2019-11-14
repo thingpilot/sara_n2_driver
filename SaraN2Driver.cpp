@@ -1006,8 +1006,14 @@ int SaraN2::cereg(int &urc, int &status)
 
     _parser->flush();
 
-    _parser->send("AT+CEREG?");
+	_parser->send("AT+CEREG=0");
+	if(!_parser->recv("OK"))
+	{
+		_smutex.unlock();
+		return SaraN2::FAIL_SET_CEREG_0;
+	}
 
+    _parser->send("AT+CEREG?");
     if(!_parser->recv("+CEREG: %d,%d", &urc, &status) || !_parser->recv("OK"))
     {
         _smutex.unlock();
