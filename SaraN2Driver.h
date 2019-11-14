@@ -73,7 +73,8 @@ class SaraN2
             FAIL_TRIGGER_NETWORK_DEREGISTER = 41,
             FAIL_CSQ                        = 42,
 			FAIL_SET_NPSMR_TRUE             = 43,
-			FAIL_GET_NPSMR                  = 44
+			FAIL_GET_NPSMR                  = 44,
+			FAIL_SET_CEREG_0                = 45
 		};
 
         /** CoAP response codes 
