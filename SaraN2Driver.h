@@ -12,7 +12,6 @@
 /** Includes 
  */
 #include <mbed.h>
-#include "board.h"
 
 /** Module-specific #defines
  */
