@@ -1,4 +1,8 @@
 ## Sara N2xx Driver Release Notes
+**v0.3.1** *15/11/2019*
+
+ - Remove dependency on `board.h` due to newly defined custom Mbed targets in the [mbed_targets](https://github.com/thingpilot/mbed_targets) repository
+
 **v0.3.0** *14/11/2019*
 
  - Query RSRP and RSRQ via AT+CSQ
