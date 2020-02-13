@@ -1,4 +1,9 @@
 ## Sara N2xx Driver Release Notes
+
+**v0.4.0** *13/02/2020*
+
+ - Add `get_radio_status(int &status)` function to determine if TX/RX circuitry is powered or not
+
 **v0.3.1** *15/11/2019*
 
  - Remove dependency on `board.h` due to newly defined custom Mbed targets in the [mbed_targets](https://github.com/thingpilot/mbed_targets) repository
