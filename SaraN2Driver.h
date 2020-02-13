@@ -401,7 +401,7 @@ class SaraN2
          *                       will be stored
 		 * @return Indicates success or failure reason
 		 */ 
-		int coap_post(char *send_data, char *recv_data, int data_indentifier, int &response_code);
+		int coap_post(uint8_t *send_data, char *recv_data, int data_indentifier, uint8_t send_block_number, uint8_t send_more_block, int &response_code);
 
 		/** Reboots the module. After receiving the 'REBOOTING' response, no further
 		 *  AT commands will be processed until the module has successfully power on

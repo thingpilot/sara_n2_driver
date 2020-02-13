@@ -692,7 +692,7 @@ int SaraN2::coap_put(char *send_data, char *recv_data, int data_indentifier, int
  *                       will be stored
  * @return Indicates success or failure reason
  */ 
-int SaraN2::coap_post(char *send_data, char *recv_data, int data_indentifier, int &response_code)
+int SaraN2::coap_post(uint8_t *send_data, char *recv_data, int data_indentifier, uint8_t send_block_number, uint8_t send_more_block, int &response_code)
 {
 	_smutex.lock();
 
