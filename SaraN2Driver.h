@@ -1,6 +1,6 @@
 /**
   * @file    SaraN2Driver.h
-  * @version 0.3.1
+  * @version 0.4.0
   * @author  Adam Mitchell
   * @brief   Header file of the NB-IoT driver module
   */

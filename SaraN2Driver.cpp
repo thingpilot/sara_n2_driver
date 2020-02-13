@@ -1,6 +1,6 @@
 /**
   * @file    SaraN2Driver.cpp
-  * @version 0.3.1
+  * @version 0.4.0
   * @author  Adam Mitchell
   * @brief   C++ file of the NB-IoT driver module
   */
