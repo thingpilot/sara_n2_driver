@@ -1,6 +1,6 @@
 /**
   * @file    SaraN2Driver.h
-  * @version 0.3.1
+  * @version 0.4.0
   * @author  Adam Mitchell
   * @brief   Header file of the NB-IoT driver module
   */
@@ -73,7 +73,8 @@ class SaraN2
             FAIL_CSQ                        = 42,
 			FAIL_SET_NPSMR_TRUE             = 43,
 			FAIL_GET_NPSMR                  = 44,
-			FAIL_SET_CEREG_0                = 45
+			FAIL_SET_CEREG_0                = 45,
+			FAIL_GET_RADIO_STATUS           = 46
 		};
 
         /** CoAP response codes 
@@ -504,6 +505,14 @@ class SaraN2
          * @return Indicates success or failure reason
          */
 		int nuestats(char *data);
+
+		/** Is the TX/RX circuitry turned on or off? 1 is on, 0 is off
+		 * 
+		 * @param &status Address of integer value to which to return the status
+		 *                value of the radio
+		 * @return Indicates success or failure reason
+		 */
+		int get_radio_status(int &status);
 
 		/** Disable TX and RX RF circuits
 		 * 
