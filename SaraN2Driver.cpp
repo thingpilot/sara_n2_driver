@@ -1118,6 +1118,30 @@ int SaraN2::nuestats(char *data)
 	return SaraN2::SARAN2_OK;
 }
 
+/** Is the TX/RX circuitry turned on or off? 1 is on, 0 is off
+ * 
+ * @param &status Address of integer value to which to return the status
+ *                value of the radio
+ * @return Indicates success or failure reason
+ */
+int SaraN2::get_radio_status(int &status)
+{
+	_smutex.lock();
+
+	_parser->flush();
+
+	_parser->send("AT+CFUN?");
+	if(!_parser->recv("+CFUN: %d,%d", &status) || !_parser->recv("OK"))
+	{
+		_smutex.unlock();
+		return SaraN2::FAIL_GET_RADIO_STATUS;
+	}
+
+	_smutex.unlock();
+
+	return SaraN2::SARAN2_OK;	
+}
+
 /** Disable TX and RX RF circuits
  * 
  * @return Indicates success or failure reason
