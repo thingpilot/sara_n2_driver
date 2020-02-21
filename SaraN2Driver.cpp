@@ -9,6 +9,7 @@
  */
 #include "SaraN2Driver.h"
 #include <string>
+#include <sstream>  
 
 /** Constructor for the SaraN2 class. Instantiates an ATCmdParser object
  *  on the heap for comms between microcontroller and modem
@@ -693,18 +694,20 @@ int SaraN2::coap_put(char *send_data, char *recv_data, int data_indentifier, int
  *                       will be stored
  * @return Indicates success or failure reason
  */ 
-int SaraN2::coap_post(uint8_t *send_data, char *recv_data, int data_indentifier, uint8_t send_block_number, uint8_t send_more_block, int &response_code)
+int SaraN2::coap_post(uint8_t* send_data, size_t buffer_len, char *recv_data, int data_indentifier, uint8_t send_block_number, uint8_t send_more_block, int &response_code)
 {
+    stringstream ss;
+    for(int i=0; i<buffer_len; ++i)
+    {
+        ss << hex << (int)send_data[i];
+    }   
+    string mystr = ss.str();
+
 	_smutex.lock();
 
 	_parser->flush();
-
-    string str = (char*)send_data;
-    //string send_data_str((char*)send_data,send_data+43);
-    //debug("\r\n%s\r\n",send_data_str.c_str());
-    debug("\r\n%s\r\n",str.c_str());
-
-	_parser->send("AT+UCOAPC=4,\"%s\",%i", str.c_str(), data_indentifier);
+    
+	_parser->send("AT+UCOAPC=4,\"%s\",%i",  mystr.c_str(), data_indentifier);
 	if(!_parser->recv("OK"))
 	{
 		_smutex.unlock();
@@ -1051,7 +1054,6 @@ int SaraN2::cscon(int &urc, int &connected)
         _smutex.unlock();
         return SaraN2::FAIL_GET_CSCON;
     }
-
     _smutex.unlock();
 
     return SaraN2::SARAN2_OK;
@@ -1137,7 +1139,7 @@ int SaraN2::get_radio_status(int &status)
 	_parser->flush();
 
 	_parser->send("AT+CFUN?");
-	if(!_parser->recv("+CFUN: %d,%d", &status) || !_parser->recv("OK"))
+	if(!_parser->recv("+CFUN: %d", &status) || !_parser->recv("OK"))
 	{
 		_smutex.unlock();
 		return SaraN2::FAIL_GET_RADIO_STATUS;
