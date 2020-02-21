@@ -8,6 +8,7 @@
 /** Includes
  */
 #include "SaraN2Driver.h"
+#include <string>
 
 /** Constructor for the SaraN2 class. Instantiates an ATCmdParser object
  *  on the heap for comms between microcontroller and modem
@@ -698,7 +699,12 @@ int SaraN2::coap_post(uint8_t *send_data, char *recv_data, int data_indentifier,
 
 	_parser->flush();
 
-	_parser->send("AT+UCOAPC=4,\"%s\",%i", send_data, data_indentifier);
+    String str = (char*)send_data;
+    string send_data_str((char*)send_data,send_data+43);
+    debug("\r\n%s\r\n",send_data_str.c_str());
+    debug("\r\n%s\r\n",str);
+
+	_parser->send("AT+UCOAPC=4,\"%s\",%i", send_data_str.c_str(), data_indentifier);
 	if(!_parser->recv("OK"))
 	{
 		_smutex.unlock();
