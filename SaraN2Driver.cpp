@@ -4,10 +4,14 @@
   * @author  Adam Mitchell
   * @brief   C++ file of the NB-IoT driver module
   */
+#if BOARD == WRIGHT_V1_0_0 || BOARD == DEVELOPMENT_BOARD_V1_1_0 /* #endif at EoF */
 
 /** Includes
  */
 #include "SaraN2Driver.h"
+
+#include <string>
+#include <sstream>  
 
 /** Constructor for the SaraN2 class. Instantiates an ATCmdParser object
  *  on the heap for comms between microcontroller and modem
@@ -692,16 +696,25 @@ int SaraN2::coap_put(char *send_data, char *recv_data, int data_indentifier, int
  *                       will be stored
  * @return Indicates success or failure reason
  */ 
-int SaraN2::coap_post(char *send_data, char *recv_data, int data_indentifier, int &response_code)
+int SaraN2::coap_post(uint8_t* send_data, size_t buffer_len, char *recv_data, int data_indentifier, uint8_t send_block_number, uint8_t send_more_block, int &response_code)
 {
+    stringstream ss; //stringstream works but it's taking huge amount in flash memory
+    for(int i=0; i<buffer_len; ++i)
+    {
+        ss << hex << (int)send_data[i];
+    }   
+    string mystr = ss.str();
+
 	_smutex.lock();
 
 	_parser->flush();
 
-	_parser->send("AT+UCOAPC=4,\"%s\",%i", send_data, data_indentifier);
-	if(!_parser->recv("OK"))
+    _parser->send("AT+UCOAPC=4,\"%s\",%i", mystr.c_str(), data_indentifier); 
+
+    if(!_parser->recv("OK"))
 	{
 		_smutex.unlock();
+        
 		return SaraN2::FAIL_START_POST_REQUEST;
 	}
 
@@ -1045,7 +1058,6 @@ int SaraN2::cscon(int &urc, int &connected)
         _smutex.unlock();
         return SaraN2::FAIL_GET_CSCON;
     }
-
     _smutex.unlock();
 
     return SaraN2::SARAN2_OK;
@@ -1131,7 +1143,7 @@ int SaraN2::get_radio_status(int &status)
 	_parser->flush();
 
 	_parser->send("AT+CFUN?");
-	if(!_parser->recv("+CFUN: %d,%d", &status) || !_parser->recv("OK"))
+	if(!_parser->recv("+CFUN: %d", &status) || !_parser->recv("OK"))
 	{
 		_smutex.unlock();
 		return SaraN2::FAIL_GET_RADIO_STATUS;
@@ -1274,3 +1286,5 @@ int SaraN2::deregister_from_network()
 
     return SaraN2::SARAN2_OK;
 }
+
+#endif
